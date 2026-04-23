@@ -1,13 +1,14 @@
-import { db } from "@/db";
-import { sql } from "drizzle-orm";
-
+/**
+ * Health check endpoint for static portfolio site
+ * No database dependency required
+ */
 export const dynamic = "force-dynamic";
 
 export async function GET() {
-  try {
-    await db.execute(sql`select 1`);
-    return Response.json({ ok: true });
-  } catch {
-    return Response.json({ ok: false }, { status: 500 });
-  }
+  return Response.json({ 
+    ok: true,
+    timestamp: new Date().toISOString(),
+    version: process.env.npm_package_version || '1.0.0',
+    uptime: process.uptime()
+  });
 }

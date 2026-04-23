@@ -26,7 +26,7 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# Local env files
+# Local env files (optional for static site)
 .env
 .env.local
 .env.development.local
@@ -49,9 +49,6 @@ next-env.d.ts
 
 # OS
 Thumbs.db
-
-# Drizzle
-drizzle/meta/
 
 # Logs
 logs

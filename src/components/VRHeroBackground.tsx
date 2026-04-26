@@ -2,28 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 
-const LOW_RES_URL = 'https://img.sboxm.top/unity/20000ps_slices/20000ps.jpg';
-
-const TILE_URLS: string[][] = [
-  [
-    'https://img.sboxm.top/unity/20000ps_slices/tile_00_00.jpg',
-    'https://img.sboxm.top/unity/20000ps_slices/tile_00_01.jpg',
-    'https://img.sboxm.top/unity/20000ps_slices/tile_00_02.jpg',
-    'https://img.sboxm.top/unity/20000ps_slices/tile_00_03.jpg',
-  ],
-  [
-    'https://img.sboxm.top/unity/20000ps_slices/tile_01_00.jpg',
-    'https://img.sboxm.top/unity/20000ps_slices/tile_01_01.jpg',
-    'https://img.sboxm.top/unity/20000ps_slices/tile_01_02.jpg',
-    'https://img.sboxm.top/unity/20000ps_slices/tile_01_03.jpg',
-  ],
-  [
-    'https://img.sboxm.top/unity/20000ps_slices/tile_02_00.jpg',
-    'https://img.sboxm.top/unity/20000ps_slices/tile_02_01.jpg',
-    'https://img.sboxm.top/unity/20000ps_slices/tile_02_02.jpg',
-    'https://img.sboxm.top/unity/20000ps_slices/tile_02_03.jpg',
-  ],
-];
+const LOW_RES_URL = 'https://img.sboxm.top/unity/hero.jpg';
 
 export default function VRHeroBackground() {
   const mountRef = useRef<HTMLDivElement>(null);
@@ -42,7 +21,8 @@ export default function VRHeroBackground() {
     isIdle: false,
     autoRotate: false,
     animFrame: 0,
-    highResLoaded: false,
+    isVisible: true,
+    observer: null as IntersectionObserver | null,
     canvas: null as HTMLCanvasElement | null,
   });
 
@@ -91,8 +71,17 @@ export default function VRHeroBackground() {
       // Start render loop
       animate();
 
-      // Load high-res tiles progressively
-      loadHighResTiles(THREE, material);
+      // Setup IntersectionObserver to pause rendering when out of view
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach(entry => {
+            s.isVisible = entry.isIntersecting;
+          });
+        },
+        { rootMargin: '400px 0px' }
+      );
+      if (mountRef.current) observer.observe(mountRef.current);
+      s.observer = observer; // store in stateRef to disconnect later
 
       // Event listeners
       window.addEventListener('mousemove', onMouseMove);
@@ -168,73 +157,13 @@ export default function VRHeroBackground() {
         500 * Math.sin(phi) * Math.sin(theta)
       );
 
-      s.renderer.render(s.scene, s.camera);
+      if (s.isVisible) {
+        s.renderer.render(s.scene, s.camera);
+      }
     }
 
     function THREE_degToRad(deg: number) {
       return (deg * Math.PI) / 180;
-    }
-
-    async function loadHighResTiles(THREE: typeof import('three'), material: import('three').MeshBasicMaterial) {
-      const s = stateRef.current;
-      if (s.highResLoaded || destroyed) return;
-
-      // Create a 4x3 canvas to stitch tiles
-      const canvas = document.createElement('canvas');
-      const COLS = 4;
-      const ROWS = 3;
-      const TILE_W = 512; // each tile placeholder
-      const TILE_H = 512;
-      canvas.width = COLS * TILE_W;
-      canvas.height = ROWS * TILE_H;
-      const ctx = canvas.getContext('2d')!;
-
-      // Draw low-res as placeholder while tiles load
-      const lowResImg = new Image();
-      lowResImg.crossOrigin = 'anonymous';
-      lowResImg.onload = () => {
-        ctx.drawImage(lowResImg, 0, 0, canvas.width, canvas.height);
-      };
-      lowResImg.src = LOW_RES_URL;
-
-      const texture = new THREE.CanvasTexture(canvas);
-      texture.colorSpace = THREE.SRGBColorSpace;
-
-      // Load tiles in order (row by row, center-out priority)
-      const loadOrder: [number, number][] = [];
-      for (let row = 0; row < ROWS; row++) {
-        for (let col = 0; col < COLS; col++) {
-          loadOrder.push([row, col]);
-        }
-      }
-
-      let tilesLoaded = 0;
-      const total = ROWS * COLS;
-
-      for (const [row, col] of loadOrder) {
-        if (destroyed) break;
-
-        await new Promise<void>((resolve) => {
-          const img = new Image();
-          img.crossOrigin = 'anonymous';
-          img.onload = () => {
-            ctx.drawImage(img, col * TILE_W, row * TILE_H, TILE_W, TILE_H);
-            texture.needsUpdate = true;
-            // Switch to high-res canvas texture after first tile
-            if (tilesLoaded === 0) {
-              material.map = texture;
-              material.needsUpdate = true;
-            }
-            tilesLoaded++;
-            if (tilesLoaded === total) {
-              s.highResLoaded = true;
-            }
-            resolve();
-          };
-          img.onerror = () => resolve();
-          img.src = TILE_URLS[row][col];
-        });
-      }
     }
 
     init();
@@ -244,6 +173,9 @@ export default function VRHeroBackground() {
       const s = stateRef.current;
       cancelAnimationFrame(s.animFrame);
       if (s.idleTimer) clearTimeout(s.idleTimer);
+      if (s.observer) {
+        s.observer.disconnect();
+      }
       window.removeEventListener('mousemove', onMouseMove);
       window.removeEventListener('resize', onResize);
       document.removeEventListener('visibilitychange', onVisibilityChange);

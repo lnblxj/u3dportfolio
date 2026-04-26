@@ -9,7 +9,7 @@ const VRHeroBackground = dynamic(() => import('./VRHeroBackground'), {
       className="absolute inset-0"
       style={{
         background: '#0a0a0a',
-        backgroundImage: `url('https://img.sboxm.top/unity/20000ps_slices/20000ps.jpg')`,
+        backgroundImage: `url('https://img.sboxm.top/unity/hero.jpg')`,
         backgroundSize: 'cover',
         backgroundPosition: 'center 40%',
       }}
@@ -122,18 +122,6 @@ export default function HeroSection() {
             />
           </div>
         </div>
-      </div>
-
-      {/* Mouse hint — desktop only */}
-      <div
-        className="absolute top-20 right-7 z-20 hidden lg:flex items-center gap-2"
-        style={{ color: 'rgba(255,255,255,0.28)', fontSize: '11px', letterSpacing: '0.06em' }}
-      >
-        <svg width="11" height="11" viewBox="0 0 11 11" fill="none">
-          <circle cx="5.5" cy="5.5" r="4.5" stroke="currentColor" strokeWidth="1" />
-          <circle cx="5.5" cy="5.5" r="1.5" fill="currentColor" opacity="0.6" />
-        </svg>
-        移动光标探索全景
       </div>
 
       <style>{`

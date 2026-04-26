@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import type { Project } from '@/data/projects';
 
 interface ProjectCardProps {
@@ -11,7 +11,33 @@ interface ProjectCardProps {
 export default function ProjectCard({ project, index }: ProjectCardProps) {
   const [activeSlide, setActiveSlide] = useState(0);
   const [showVideo, setShowVideo] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
   const carouselRef = useRef<HTMLDivElement>(null);
+  const cardRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.1, rootMargin: '0px 0px -50px 0px' }
+    );
+    if (cardRef.current) observer.observe(cardRef.current);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (showVideo || project.images.length <= 1) return;
+
+    const timer = setInterval(() => {
+      setActiveSlide((prev) => (prev + 1) % project.images.length);
+    }, 4000);
+
+    return () => clearInterval(timer);
+  }, [showVideo, project.images.length, activeSlide]);
 
   const goTo = (i: number) => {
     setActiveSlide(i);
@@ -32,7 +58,8 @@ export default function ProjectCard({ project, index }: ProjectCardProps) {
 
   return (
     <div
-      className={`project-card group w-full rounded-3xl overflow-hidden reveal${isEven ? '' : '-right'}`}
+      ref={cardRef}
+      className={`project-card group w-full rounded-3xl overflow-hidden reveal${isEven ? '' : '-right'} ${isVisible ? 'visible' : ''}`}
       style={{
         background: 'rgba(255,255,255,0.03)',
         border: '1px solid rgba(255,255,255,0.08)',
@@ -44,11 +71,13 @@ export default function ProjectCard({ project, index }: ProjectCardProps) {
         <div className="relative lg:w-[55%] aspect-video lg:aspect-auto overflow-hidden"
           style={{ minHeight: '320px' }}>
           {showVideo && project.videoUrl ? (
-            <div className="video-wrapper absolute inset-0 rounded-none">
-              <iframe
+            <div className="video-wrapper absolute inset-0 rounded-none bg-black flex items-center justify-center">
+              <video
                 src={project.videoUrl}
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
+                controls
+                autoPlay
+                playsInline
+                className="w-full h-full object-contain outline-none"
                 title={project.title}
               />
             </div>
@@ -68,6 +97,7 @@ export default function ProjectCard({ project, index }: ProjectCardProps) {
                       alt={`${project.title} screenshot ${i + 1}`}
                       className="object-cover"
                       style={{ width: `${100 / project.images.length}%`, height: '100%', float: 'left' }}
+                      loading="lazy"
                     />
                   ))}
                 </div>

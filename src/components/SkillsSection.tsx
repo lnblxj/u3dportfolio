@@ -2,20 +2,20 @@
 
 const skillGroups = [
   {
-    category: '引擎与渲染',
+    category: '引擎',
     icon: '⬡',
     color: 'rgba(251,191,36,0.08)',
     borderColor: 'rgba(251,191,36,0.15)',
     iconColor: 'rgba(251,191,36,0.7)',
-    skills: ['Unity3D', 'URP / HDRP', 'Shader Graph', 'VFX Graph', 'Particle System', 'Post Processing'],
+    skills: ['Unity3D', 'URP / HDRP', 'VR', 'DoTween', 'UniStorm', 'Animator', 'AI'],
   },
   {
-    category: '编程语言',
+    category: '开发语言',
     icon: '◈',
     color: 'rgba(96,165,250,0.08)',
     borderColor: 'rgba(96,165,250,0.15)',
     iconColor: 'rgba(96,165,250,0.7)',
-    skills: ['C#', 'HLSL / GLSL', 'Python', 'TypeScript', 'SQL', 'Lua'],
+    skills: ['C#', 'Java', 'Python', 'TypeScript', 'SQL', 'C++', 'Vue', 'HTML'],
   },
   {
     category: '数字孪生',
@@ -23,23 +23,23 @@ const skillGroups = [
     color: 'rgba(52,211,153,0.08)',
     borderColor: 'rgba(52,211,153,0.15)',
     iconColor: 'rgba(52,211,153,0.7)',
-    skills: ['IoT 集成', 'WebSocket', 'MQTT', 'REST API', 'GIS / BIM', '时序数据库'],
+    skills: ['IoT 集成', 'WebSocket', 'MQTT', 'REST API'],
   },
   {
-    category: 'XR 开发',
+    category: '后端开发',
     icon: '◇',
     color: 'rgba(167,139,250,0.08)',
     borderColor: 'rgba(167,139,250,0.15)',
     iconColor: 'rgba(167,139,250,0.7)',
-    skills: ['XR Interaction Toolkit', 'Meta Quest', 'HTC Vive', 'AR Foundation', 'WebXR', 'OpenXR'],
+    skills: ['SpringBoot', 'JWT', 'Spring Cloud', 'Redis', 'Elasticsearch', 'MinIO', 'MyBatis-Plus', 'RabbitMQ'],
   },
   {
-    category: '仿真技术',
+    category: '云服务',
     icon: '○',
     color: 'rgba(251,113,133,0.08)',
     borderColor: 'rgba(251,113,133,0.15)',
     iconColor: 'rgba(251,113,133,0.7)',
-    skills: ['物理引擎', 'Agent 仿真', 'NavMesh AI', 'GPU Instancing', 'LOD 优化', '流体仿真'],
+    skills: ['CDN', 'Docker', 'Debian', 'Workers', 'R2'],
   },
   {
     category: '工具链',
@@ -47,7 +47,7 @@ const skillGroups = [
     color: 'rgba(251,146,60,0.08)',
     borderColor: 'rgba(251,146,60,0.15)',
     iconColor: 'rgba(251,146,60,0.7)',
-    skills: ['Git', 'Blender', 'Figma', 'Docker', 'Jenkins CI/CD', 'Jira'],
+    skills: ['Git', 'Blender', 'Figma', 'CI/CD', 'MySQL', 'Post SQL', 'MongoDB'],
   },
 ];
 

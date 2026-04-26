@@ -75,7 +75,7 @@ export default function SkillsSection() {
               className="text-sm max-w-xs lg:text-right leading-loose"
               style={{ color: 'rgba(255,255,255,0.38)' }}
             >
-              从底层着色器到系统架构，
+              从场景设计到系统架构，
               <br />
               覆盖虚拟仿真与数字孪生全链路
             </p>

@@ -40,13 +40,13 @@ const contacts = [
 
 export default function ContactSection() {
   return (
-    <section id="contact" className="py-32 px-6" style={{ background: '#000' }}>
+    <section id="contact" className="py-16 md:py-32 px-6" style={{ background: '#000' }}>
       <div className="max-w-7xl mx-auto">
         {/* Divider */}
-        <div className="divider mb-32 reveal" />
+        <div className="divider mb-16 md:mb-32 reveal" />
 
         {/* Header */}
-        <div className="max-w-2xl mb-20 reveal">
+        <div className="max-w-2xl mb-12 md:mb-20 reveal">
           <p className="section-eyebrow mb-4">联系方式</p>
           <h2 className="section-title mb-6">
             期待与你交流
@@ -112,7 +112,7 @@ export default function ContactSection() {
         </div>
 
         {/* Footer */}
-        <div className="mt-24 pt-8 divider reveal" />
+        <div className="mt-16 md:mt-24 pt-8 divider reveal" />
         <div className="mt-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 reveal">
           <p className="text-xs" style={{ color: 'rgba(255,255,255,0.25)', letterSpacing: '-0.01em' }}>
             © 2025 SBOXM. Built with Unity3D · Next.js · Three.js

@@ -50,7 +50,7 @@ export default function HeroSection() {
 
       {/* Hero content — vertically centered with slight bias downward */}
       <div
-        className="relative z-20 flex flex-col items-center justify-end h-full pb-28 px-6 text-center"
+        className="relative z-20 flex flex-col items-center justify-end h-full pb-20 md:pb-28 px-6 text-center"
       >
         {/* Eyebrow badge */}
         <div

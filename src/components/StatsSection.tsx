@@ -9,7 +9,7 @@ const stats = [
 export default function StatsSection() {
   return (
     <section
-      className="relative px-6 py-28 overflow-hidden"
+      className="relative px-6 py-16 md:py-28 overflow-hidden"
       style={{ background: '#000', borderTop: '1px solid rgba(255,255,255,0.06)' }}
     >
       {/* Subtle grid background */}
@@ -80,6 +80,9 @@ export default function StatsSection() {
                     {stat.sub}
                   </p>
                 </div>
+              ))}
+              {Array.from({ length: stats.length % 2 }).map((_, i) => (
+                <div key={`empty-${i}`} style={{ background: '#000' }} />
               ))}
             </div>
           </div>

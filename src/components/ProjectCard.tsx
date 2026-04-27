@@ -68,10 +68,9 @@ export default function ProjectCard({ project, index }: ProjectCardProps) {
     >
       <div className={`flex flex-col ${isEven ? 'lg:flex-row' : 'lg:flex-row-reverse'}`}>
         {/* Media section */}
-        <div className="relative lg:w-[55%] aspect-video lg:aspect-auto overflow-hidden"
-          style={{ minHeight: '320px' }}>
+        <div className="relative lg:w-[55%] aspect-video lg:aspect-auto overflow-hidden min-h-[200px] sm:min-h-[250px] lg:min-h-[320px]">
           {showVideo && project.videoUrl ? (
-            <div className="video-wrapper absolute inset-0 rounded-none bg-black flex items-center justify-center">
+            <div className="absolute inset-0 bg-black flex items-center justify-center">
               <video
                 src={project.videoUrl}
                 controls
@@ -181,7 +180,7 @@ export default function ProjectCard({ project, index }: ProjectCardProps) {
         </div>
 
         {/* Content section */}
-        <div className="flex flex-col justify-center lg:w-[45%] p-8 lg:p-10 xl:p-12">
+        <div className="flex flex-col justify-center lg:w-[45%] p-6 md:p-8 lg:p-10 xl:p-12">
           {/* Highlight */}
           {project.highlight && (
             <p className="text-xs font-mono mb-3" style={{ color: 'rgba(255,255,255,0.4)', letterSpacing: '0.1em' }}>

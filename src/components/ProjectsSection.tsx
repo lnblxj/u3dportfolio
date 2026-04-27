@@ -18,11 +18,11 @@ export default function ProjectsSection() {
   ];
 
   return (
-    <section id="projects" className="py-32 px-6" style={{ background: '#000' }}>
+    <section id="projects" className="py-16 md:py-32 px-6" style={{ background: '#000' }}>
       <div className="max-w-7xl mx-auto">
 
         {/* Section intro */}
-        <div className="mb-16">
+        <div className="mb-12 md:mb-16">
           <div className="reveal">
             <p className="section-eyebrow mb-5">精选作品</p>
             <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-8">
@@ -43,7 +43,7 @@ export default function ProjectsSection() {
           </div>
 
           {/* Divider */}
-          <div className="divider mt-12 mb-8 reveal" />
+          <div className="divider mt-8 md:mt-12 mb-6 md:mb-8 reveal" />
 
           {/* Filter pills */}
           <div className="flex items-center gap-2 flex-wrap reveal">
@@ -86,7 +86,7 @@ export default function ProjectsSection() {
         </div>
 
         {/* Bottom note */}
-        <div className="mt-16 text-center reveal">
+        <div className="mt-12 md:mt-16 text-center reveal">
           <p className="text-xs" style={{ color: 'rgba(255,255,255,0.2)', letterSpacing: '0.08em' }}>
             — 持续更新中，更多项目即将呈现 —
           </p>

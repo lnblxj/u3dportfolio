@@ -8,7 +8,7 @@ import ScrollRevealInit from '@/components/ScrollRevealInit';
 
 export default function HomePage() {
   return (
-    <main className="relative" style={{ background: '#000', color: '#fff' }}>
+    <main className="relative overflow-x-hidden" style={{ background: '#000', color: '#fff' }}>
       <ScrollRevealInit />
       <NavBar />
       <HeroSection />

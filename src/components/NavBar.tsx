@@ -28,24 +28,13 @@ export default function NavBar() {
         style={scrolled ? {
           backdropFilter: 'blur(20px) saturate(180%)',
           WebkitBackdropFilter: 'blur(20px) saturate(180%)',
-          background: 'rgba(0,0,0,0.75)',
-          borderBottom: '1px solid rgba(255,255,255,0.06)',
+          background: 'rgba(14,14,16,0.8)',
+          borderBottom: '1px solid rgba(0, 217, 255, 0.1)',
         } : {}}
       >
         <div className="max-w-7xl mx-auto px-6 h-14 flex items-center justify-between">
-          {/* Logo */}
-          <a href="#" className="flex items-center gap-2.5 text-white no-underline">
-            <div className="w-7 h-7 rounded-lg flex items-center justify-center"
-              style={{ background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.15)' }}>
-              <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                <rect x="1" y="1" width="5" height="5" rx="1" fill="white" fillOpacity="0.9" />
-                <rect x="8" y="1" width="5" height="5" rx="1" fill="white" fillOpacity="0.5" />
-                <rect x="1" y="8" width="5" height="5" rx="1" fill="white" fillOpacity="0.5" />
-                <rect x="8" y="8" width="5" height="5" rx="1" fill="white" fillOpacity="0.9" />
-              </svg>
-            </div>
-            <span className="text-sm font-semibold tracking-tight">Unity Portfolio</span>
-          </a>
+          {/* 空白占位，保持布局 */}
+          <div className="w-8" />
 
           {/* Desktop nav */}
           <div className="hidden md:flex items-center gap-8">
@@ -54,9 +43,9 @@ export default function NavBar() {
                 key={link.href}
                 href={link.href}
                 className="text-sm transition-colors duration-200"
-                style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none' }}
-                onMouseEnter={(e) => (e.currentTarget.style.color = '#fff')}
-                onMouseLeave={(e) => (e.currentTarget.style.color = 'rgba(255,255,255,0.7)')}
+                style={{ color: 'var(--color-text-secondary)', textDecoration: 'none' }}
+                onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--color-unity-cyan)')}
+                onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--color-text-secondary)')}
               >
                 {link.label}
               </a>
@@ -77,23 +66,23 @@ export default function NavBar() {
             onClick={() => setMenuOpen(!menuOpen)}
             aria-label="Menu"
           >
-            <span className="block w-5 h-px bg-white transition-all duration-200"
-              style={menuOpen ? { transform: 'rotate(45deg) translateY(3px)' } : {}} />
-            <span className="block w-5 h-px bg-white transition-all duration-200"
-              style={menuOpen ? { transform: 'rotate(-45deg) translateY(-3px)' } : {}} />
+            <span className="block w-5 h-px transition-all duration-200"
+              style={{ background: 'var(--color-unity-cyan)', ...(menuOpen ? { transform: 'rotate(45deg) translateY(3px)' } : {}) }} />
+            <span className="block w-5 h-px transition-all duration-200"
+              style={{ background: 'var(--color-unity-cyan)', ...(menuOpen ? { transform: 'rotate(-45deg) translateY(-3px)' } : {}) }} />
           </button>
         </div>
 
         {/* Mobile menu */}
         {menuOpen && (
           <div className="md:hidden px-6 pb-6 pt-2 flex flex-col gap-4"
-            style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+            style={{ borderTop: '1px solid rgba(0, 217, 255, 0.1)' }}>
             {navLinks.map((link) => (
               <a
                 key={link.href}
                 href={link.href}
                 className="text-sm"
-                style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'none' }}
+                style={{ color: 'var(--color-text-secondary)', textDecoration: 'none' }}
                 onClick={() => setMenuOpen(false)}
               >
                 {link.label}

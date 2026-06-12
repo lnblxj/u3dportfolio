@@ -40,25 +40,25 @@ const contacts = [
 
 export default function ContactSection() {
   return (
-    <section id="contact" className="py-16 md:py-32 px-6" style={{ background: '#000' }}>
+    <section id="contact" className="py-16 md:py-32 px-6" style={{ background: '#0E0E10' }}>
       <div className="max-w-7xl mx-auto">
         {/* Divider */}
         <div className="divider mb-16 md:mb-32 reveal" />
 
         {/* Header */}
         <div className="max-w-2xl mb-12 md:mb-20 reveal">
-          <p className="section-eyebrow mb-4">联系方式</p>
+          <p className="section-eyebrow mb-4">// 联系方式</p>
           <h2 className="section-title mb-6">
             期待与你交流
           </h2>
-          <p className="text-lg leading-relaxed" style={{ color: 'rgba(255,255,255,0.5)' }}>
+          <p className="text-lg leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
             无论是项目合作、技术探讨，还是工作机会，都欢迎通过以下方式联系我。
           </p>
         </div>
 
         {/* Contact cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-px stagger-children"
-          style={{ background: 'rgba(255,255,255,0.06)' }}>
+          style={{ background: 'rgba(0, 217, 255, 0.1)' }}>
           {contacts.map((contact) => (
             <a
               key={contact.label}
@@ -67,43 +67,43 @@ export default function ContactSection() {
               rel="noopener noreferrer"
               className="block p-8 group"
               style={{
-                background: '#000',
+                background: '#1A1A1D',
                 textDecoration: 'none',
                 transition: 'background 0.2s ease',
               }}
-              onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.03)')}
-              onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.background = '#000')}
+              onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.background = 'rgba(0, 217, 255, 0.05)')}
+              onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.background = '#1A1A1D')}
             >
               {/* Icon */}
-              <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-6 transition-all duration-200"
+              <div className="w-10 h-10 rounded-lg flex items-center justify-center mb-6 transition-all duration-200"
                 style={{
-                  background: 'rgba(255,255,255,0.06)',
-                  border: '1px solid rgba(255,255,255,0.1)',
-                  color: 'rgba(255,255,255,0.7)',
+                  background: 'rgba(0, 217, 255, 0.1)',
+                  border: '1px solid rgba(0, 217, 255, 0.2)',
+                  color: 'var(--color-unity-cyan)',
                 }}>
                 {contact.icon}
               </div>
 
               {/* Label */}
               <p className="text-xs font-semibold mb-2"
-                style={{ color: 'rgba(255,255,255,0.4)', letterSpacing: '0.1em', textTransform: 'uppercase' }}>
+                style={{ color: 'var(--color-text-tertiary)', letterSpacing: '0.1em', textTransform: 'uppercase', fontFamily: 'JetBrains Mono, monospace' }}>
                 {contact.label}
               </p>
 
               {/* Value */}
-              <p className="text-base font-medium mb-2 group-hover:text-white transition-colors duration-200"
-                style={{ color: 'rgba(255,255,255,0.85)', letterSpacing: '-0.01em' }}>
+              <p className="text-base font-medium mb-2 transition-colors duration-200"
+                style={{ color: 'var(--color-text-primary)', letterSpacing: '-0.01em' }}>
                 {contact.value}
               </p>
 
               {/* Description */}
-              <p className="text-xs" style={{ color: 'rgba(255,255,255,0.35)' }}>
+              <p className="text-xs" style={{ color: 'var(--color-text-secondary)' }}>
                 {contact.description}
               </p>
 
               {/* Arrow */}
               <div className="mt-6 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style={{ color: 'rgba(255,255,255,0.5)' }}>
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style={{ color: 'var(--color-unity-cyan)' }}>
                   <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
               </div>
@@ -114,10 +114,10 @@ export default function ContactSection() {
         {/* Footer */}
         <div className="mt-16 md:mt-24 pt-8 divider reveal" />
         <div className="mt-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 reveal">
-          <p className="text-xs" style={{ color: 'rgba(255,255,255,0.25)', letterSpacing: '-0.01em' }}>
+          <p className="text-xs" style={{ color: 'var(--color-text-tertiary)', letterSpacing: '-0.01em', opacity: 0.6 }}>
             © 2025 SBOXM. Built with Unity3D · Next.js · Three.js
           </p>
-          <p className="text-xs font-mono" style={{ color: 'rgba(255,255,255,0.2)' }}>
+          <p className="text-xs font-mono" style={{ color: 'var(--color-text-tertiary)', opacity: 0.5 }}>
             Virtual Simulation &amp; Digital Twin Direction
           </p>
         </div>

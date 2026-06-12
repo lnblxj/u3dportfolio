@@ -59,10 +59,10 @@ export default function ProjectCard({ project, index }: ProjectCardProps) {
   return (
     <div
       ref={cardRef}
-      className={`project-card group w-full rounded-3xl overflow-hidden reveal${isEven ? '' : '-right'} ${isVisible ? 'visible' : ''}`}
+      className={`project-card group w-full rounded-2xl overflow-hidden reveal${isEven ? '' : '-right'} ${isVisible ? 'visible' : ''}`}
       style={{
-        background: 'rgba(255,255,255,0.03)',
-        border: '1px solid rgba(255,255,255,0.08)',
+        background: '#1A1A1D',
+        border: '1px solid rgba(0, 217, 255, 0.1)',
         transitionDelay: `${index * 60}ms`,
       }}
     >

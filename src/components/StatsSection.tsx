@@ -10,10 +10,10 @@ export default function StatsSection() {
   return (
     <section
       className="relative px-6 py-16 md:py-28 overflow-hidden"
-      style={{ background: '#000', borderTop: '1px solid rgba(255,255,255,0.06)' }}
+      style={{ background: '#0E0E10', borderTop: '1px solid rgba(0, 217, 255, 0.1)' }}
     >
-      {/* Subtle grid background */}
-      <div className="absolute inset-0 grid-pattern pointer-events-none" />
+      {/* Unity grid background */}
+      <div className="unity-grid opacity-30" />
 
       <div className="max-w-7xl mx-auto relative">
         {/* Two-column layout: text left + stats right */}
@@ -21,10 +21,10 @@ export default function StatsSection() {
 
           {/* Left: brief intro */}
           <div className="lg:w-[40%] reveal">
-            <p className="section-eyebrow mb-5">关于我</p>
+            <p className="section-eyebrow mb-5">// 关于我</p>
             <h2
               className="text-3xl lg:text-4xl font-bold mb-6 leading-snug"
-              style={{ letterSpacing: '-0.03em' }}
+              style={{ letterSpacing: '-0.03em', fontFamily: 'JetBrains Mono, monospace' }}
             >
               虚实融合的
               <br />
@@ -32,7 +32,7 @@ export default function StatsSection() {
             </h2>
             <p
               className="text-sm leading-loose mb-8"
-              style={{ color: 'rgba(255,255,255,0.5)', maxWidth: '380px' }}
+              style={{ color: 'var(--color-text-secondary)', maxWidth: '380px' }}
             >
               专注于将物理世界的规律与工程数据
               精确还原至数字空间。擅长前后端的全栈研发，
@@ -47,42 +47,42 @@ export default function StatsSection() {
           <div className="lg:w-[60%] w-full stagger-children">
             <div
               className="grid grid-cols-2 gap-px"
-              style={{ background: 'rgba(255,255,255,0.07)' }}
+              style={{ background: 'rgba(0, 217, 255, 0.15)' }}
             >
               {stats.map((stat) => (
                 <div
                   key={stat.label}
                   className="p-8 group"
                   style={{
-                    background: '#000',
+                    background: '#1A1A1D',
                     transition: 'background 0.2s ease',
                   }}
                   onMouseEnter={(e) =>
-                    ((e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.03)')
+                    ((e.currentTarget as HTMLElement).style.background = 'rgba(0, 217, 255, 0.05)')
                   }
                   onMouseLeave={(e) =>
-                    ((e.currentTarget as HTMLElement).style.background = '#000')
+                    ((e.currentTarget as HTMLElement).style.background = '#1A1A1D')
                   }
                 >
                   <p
                     className="text-5xl font-bold mb-2"
-                    style={{ letterSpacing: '-0.04em', lineHeight: 1 }}
+                    style={{ letterSpacing: '-0.04em', lineHeight: 1, fontFamily: 'JetBrains Mono, monospace', color: '#00D9FF' }}
                   >
                     {stat.value}
                   </p>
                   <p
                     className="text-sm font-semibold mb-1"
-                    style={{ color: 'rgba(255,255,255,0.75)' }}
+                    style={{ color: 'var(--color-text-primary)' }}
                   >
                     {stat.label}
                   </p>
-                  <p className="text-xs" style={{ color: 'rgba(255,255,255,0.3)' }}>
+                  <p className="text-xs" style={{ color: 'var(--color-text-tertiary)' }}>
                     {stat.sub}
                   </p>
                 </div>
               ))}
               {Array.from({ length: stats.length % 2 }).map((_, i) => (
-                <div key={`empty-${i}`} style={{ background: '#000' }} />
+                <div key={`empty-${i}`} style={{ background: '#1A1A1D' }} />
               ))}
             </div>
           </div>

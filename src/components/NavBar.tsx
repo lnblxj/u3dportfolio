@@ -32,7 +32,7 @@ export default function NavBar() {
           borderBottom: '1px solid rgba(0, 217, 255, 0.1)',
         } : {}}
       >
-        <div className="max-w-7xl mx-auto px-6 h-14 flex items-center justify-between">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
           {/* 空白占位，保持布局 */}
           <div className="w-8" />
 
@@ -75,7 +75,7 @@ export default function NavBar() {
 
         {/* Mobile menu */}
         {menuOpen && (
-          <div className="md:hidden px-6 pb-6 pt-2 flex flex-col gap-4"
+          <div className="md:hidden px-4 sm:px-6 pb-6 pt-2 flex flex-col gap-4 nav-blur"
             style={{ borderTop: '1px solid rgba(0, 217, 255, 0.1)' }}>
             {navLinks.map((link) => (
               <a

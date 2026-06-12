@@ -158,7 +158,7 @@ export default function HeroSectionNew() {
     <section
       ref={sectionRef}
       className="relative w-full overflow-hidden"
-      style={{ height: '100svh', minHeight: '700px' }}
+      style={{ height: '100svh', minHeight: 'min(700px, 100svh)' }}
     >
       {/* VR Background */}
       <VRHeroBackground />
@@ -205,16 +205,16 @@ export default function HeroSectionNew() {
       </div>
 
       {/* 主内容容器 - 左右布局 */}
-      <div className="relative z-20 h-full max-w-7xl mx-auto px-6">
-        <div className="h-full flex flex-col lg:flex-row items-center justify-between gap-12">
+      <div className="relative z-20 h-full max-w-7xl mx-auto px-4 sm:px-6">
+        <div className="h-full flex flex-col lg:flex-row items-center justify-center lg:justify-between gap-6 sm:gap-8 lg:gap-12">
 
           {/* 左侧：主标题和 CTA */}
-          <div className="flex-1 flex flex-col justify-center lg:pt-0 pt-20">
+          <div className="flex-1 flex flex-col justify-center lg:pt-0 pt-16 sm:pt-20">
             {/* 眉标 */}
-            <div className="flex items-center gap-2 mb-8">
+            <div className="flex items-center gap-2 mb-5 sm:mb-8">
               <span className="glow-dot" />
               <span
-                className="text-xs font-bold tracking-wider"
+                className="text-[10px] sm:text-xs font-bold tracking-wider"
                 style={{
                   color: '#00D9FF',
                   fontFamily: 'JetBrains Mono, monospace',
@@ -228,7 +228,7 @@ export default function HeroSectionNew() {
             {/* 标题 - 拆分为字符以实现逐字动画 */}
             <h1
               ref={titleRef}
-              className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight"
+              className="text-[clamp(2.25rem,12vw,3.5rem)] md:text-6xl lg:text-7xl font-bold mb-4 sm:mb-6 leading-tight"
               style={{
                 fontFamily: 'JetBrains Mono, monospace',
                 letterSpacing: '-0.02em',
@@ -253,7 +253,7 @@ export default function HeroSectionNew() {
             {/* 副标题 */}
             <p
               ref={subtitleRef}
-              className="text-base md:text-lg mb-10 max-w-xl leading-relaxed"
+              className="text-sm sm:text-base md:text-lg mb-7 sm:mb-10 max-w-xl leading-relaxed"
               style={{ color: 'var(--color-text-secondary)' }}
             >
               专注虚拟仿真与数字孪生方向，将真实系统精准映射至数字空间，
@@ -261,7 +261,7 @@ export default function HeroSectionNew() {
             </p>
 
             {/* CTA 按钮 */}
-            <div ref={ctaRef} className="flex flex-wrap items-center gap-4">
+            <div ref={ctaRef} className="flex flex-col min-[380px]:flex-row flex-wrap items-stretch min-[380px]:items-center gap-3 sm:gap-4">
               <button onClick={scrollToProjects} className="btn-primary group">
                 查看作品
                 <svg width="14" height="14" viewBox="0 0 14 14" fill="none" className="transition-transform group-hover:translate-y-1">
@@ -283,10 +283,10 @@ export default function HeroSectionNew() {
           {/* 右侧：统计数据卡片 */}
           <div
             ref={statsRef}
-            className="flex flex-col gap-4 lg:min-w-[280px]"
+            className="hidden sm:grid grid-cols-3 lg:flex lg:flex-col gap-3 lg:gap-4 w-full lg:w-auto lg:min-w-[280px]"
           >
-            <div className="stat-item frosted-card rounded-2xl p-6 backdrop-blur-xl">
-              <div className="text-4xl font-bold mb-2" style={{ fontFamily: 'JetBrains Mono, monospace', color: '#00D9FF' }}>
+            <div className="stat-item frosted-card rounded-2xl p-4 lg:p-6 backdrop-blur-xl">
+              <div className="text-2xl lg:text-4xl font-bold mb-1 lg:mb-2" style={{ fontFamily: 'JetBrains Mono, monospace', color: '#00D9FF' }}>
                 10+
               </div>
               <div className="text-sm font-semibold mb-1" style={{ color: 'var(--color-text-primary)' }}>
@@ -297,8 +297,8 @@ export default function HeroSectionNew() {
               </div>
             </div>
 
-            <div className="stat-item frosted-card rounded-2xl p-6 backdrop-blur-xl">
-              <div className="text-4xl font-bold mb-2" style={{ fontFamily: 'JetBrains Mono, monospace', color: '#00D9FF' }}>
+            <div className="stat-item frosted-card rounded-2xl p-4 lg:p-6 backdrop-blur-xl">
+              <div className="text-2xl lg:text-4xl font-bold mb-1 lg:mb-2" style={{ fontFamily: 'JetBrains Mono, monospace', color: '#00D9FF' }}>
                 2年+
               </div>
               <div className="text-sm font-semibold mb-1" style={{ color: 'var(--color-text-primary)' }}>
@@ -309,8 +309,8 @@ export default function HeroSectionNew() {
               </div>
             </div>
 
-            <div className="stat-item frosted-card rounded-2xl p-6 backdrop-blur-xl">
-              <div className="text-4xl font-bold mb-2" style={{ fontFamily: 'JetBrains Mono, monospace', color: '#00D9FF' }}>
+            <div className="stat-item frosted-card rounded-2xl p-4 lg:p-6 backdrop-blur-xl">
+              <div className="text-2xl lg:text-4xl font-bold mb-1 lg:mb-2" style={{ fontFamily: 'JetBrains Mono, monospace', color: '#00D9FF' }}>
                 1项
               </div>
               <div className="text-sm font-semibold mb-1" style={{ color: 'var(--color-text-primary)' }}>
@@ -325,7 +325,7 @@ export default function HeroSectionNew() {
       </div>
 
       {/* 滚动指示器 */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 z-30">
+      <div className="hidden sm:flex absolute bottom-8 left-1/2 -translate-x-1/2 flex-col items-center gap-2 z-30">
         <div
           className="w-5 h-8 rounded-lg flex items-start justify-center pt-1.5"
           style={{ border: '1px solid rgba(0, 217, 255, 0.3)' }}

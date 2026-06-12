@@ -410,3 +410,62 @@ body {
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
+
+@media (max-width: 767px) {
+  html {
+    scroll-padding-top: 64px;
+  }
+
+  body {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  .section-title {
+    font-size: clamp(28px, 9vw, 40px);
+    line-height: 1.16;
+  }
+
+  .section-eyebrow {
+    font-size: 10px;
+    letter-spacing: 0.12em;
+  }
+
+  .btn-primary,
+  .btn-ghost {
+    justify-content: center;
+    min-height: 44px;
+    max-width: 100%;
+    padding: 12px 18px;
+    font-size: 14px;
+    white-space: normal;
+    text-align: center;
+  }
+
+  .tag-pill {
+    max-width: 100%;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+
+  .mobile-line-clamp {
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .reveal-left {
+    transform: translateX(-24px);
+  }
+
+  .reveal-right {
+    transform: translateX(24px);
+  }
+}
+
+@media (hover: none) and (pointer: coarse) {
+  .project-card:hover {
+    transform: none;
+    box-shadow: none;
+  }
+}

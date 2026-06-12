@@ -124,19 +124,19 @@ export default function SkillsSectionMarquee() {
     <section
       ref={sectionRef}
       id="skills"
-      className="relative py-20 md:py-32 px-6 overflow-hidden"
+      className="relative py-14 sm:py-20 md:py-32 px-4 sm:px-6 overflow-hidden"
       style={{ background: '#0E0E10' }}
     >
       {/* 背景装饰 */}
       <div className="unity-grid opacity-10" />
 
-      <div className="max-w-7xl mx-auto relative mb-16">
+      <div className="max-w-7xl mx-auto relative mb-10 sm:mb-16">
         {/* Header */}
-        <div ref={headerRef} className="text-center mb-16">
-          <div className="flex items-center justify-center gap-3 mb-6">
-            <div className="w-12 h-px" style={{ background: 'var(--color-unity-cyan)' }} />
+        <div ref={headerRef} className="text-center mb-10 sm:mb-16">
+          <div className="flex items-center justify-center gap-3 mb-5 sm:mb-6">
+            <div className="w-8 sm:w-12 h-px" style={{ background: 'var(--color-unity-cyan)' }} />
             <p className="section-eyebrow">// 技术能力</p>
-            <div className="w-12 h-px" style={{ background: 'var(--color-unity-cyan)' }} />
+            <div className="w-8 sm:w-12 h-px" style={{ background: 'var(--color-unity-cyan)' }} />
           </div>
 
           <h2 className="section-title mb-6">
@@ -145,14 +145,14 @@ export default function SkillsSectionMarquee() {
             <span style={{ color: 'var(--color-text-tertiary)' }}>全栈技术储备</span>
           </h2>
 
-          <p className="text-base max-w-2xl mx-auto leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
+          <p className="text-sm sm:text-base max-w-2xl mx-auto leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
             从场景设计到系统架构，覆盖虚拟仿真与数字孪生全链路
           </p>
         </div>
       </div>
 
       {/* 弹幕瀑布流 */}
-      <div className="relative py-8">
+      <div className="relative py-4 sm:py-8 -mx-4 sm:mx-0">
         {marqueeRows.map((rowItems, rowIndex) => {
           const isEven = rowIndex % 2 === 0;
           const duration = 40 + rowIndex * 3; // 不同行不同速度
@@ -160,7 +160,7 @@ export default function SkillsSectionMarquee() {
           return (
             <div
               key={rowIndex}
-              className="mb-3 overflow-hidden"
+              className="mb-2 sm:mb-3 overflow-hidden"
               style={{
                 maskImage: 'linear-gradient(to right, transparent 0%, black 30%, black 70%, transparent 100%)',
                 WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 30%, black 70%, transparent 100%)',
@@ -177,7 +177,7 @@ export default function SkillsSectionMarquee() {
                   {rowItems.map((item, index) => (
                     <div
                       key={`row${rowIndex}-${index}`}
-                      className="flex-shrink-0 px-5 py-2.5 rounded-lg transition-all duration-300 hover:scale-110 cursor-pointer"
+                      className="flex-shrink-0 px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-lg transition-all duration-300 hover:scale-110 cursor-pointer"
                       style={{
                         background: `${item.color}15`,
                         border: `1px solid ${item.color}33`,
@@ -209,7 +209,7 @@ export default function SkillsSectionMarquee() {
       </div>
 
       {/* 底部统计 */}
-      <div className="mt-20 max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6">
+      <div className="mt-12 sm:mt-20 max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-6">
         {[
           { label: '技术栈', value: skillGroups.length },
           { label: '总技能数', value: skillGroups.reduce((acc, g) => acc + g.skills.length, 0) },
@@ -218,14 +218,14 @@ export default function SkillsSectionMarquee() {
         ].map((stat, i) => (
           <div
             key={i}
-            className="text-center p-6 rounded-xl"
+            className="text-center p-4 sm:p-6 rounded-xl"
             style={{
               background: 'rgba(0, 217, 255, 0.05)',
               border: '1px solid rgba(0, 217, 255, 0.1)',
             }}
           >
             <div
-              className="text-3xl font-bold mb-2"
+              className="text-2xl sm:text-3xl font-bold mb-2"
               style={{ fontFamily: 'JetBrains Mono, monospace', color: '#00D9FF' }}
             >
               {stat.value}

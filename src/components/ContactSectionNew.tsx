@@ -108,7 +108,7 @@ export default function ContactSectionNew() {
     <section
       ref={sectionRef}
       id="contact"
-      className="relative py-20 md:py-32 px-6"
+      className="relative py-14 sm:py-20 md:py-32 px-4 sm:px-6"
       style={{ background: '#0E0E10' }}
     >
       {/* 背景装饰 */}
@@ -121,32 +121,32 @@ export default function ContactSectionNew() {
 
       <div className="max-w-7xl mx-auto relative">
         {/* 分隔线 */}
-        <div className="divider mb-16 md:mb-24" />
+        <div className="divider mb-10 sm:mb-16 md:mb-24" />
 
         {/* Header */}
-        <div ref={headerRef} className="text-center mb-16">
-          <div className="flex items-center justify-center gap-3 mb-6">
-            <div className="w-12 h-px" style={{ background: 'var(--color-unity-cyan)' }} />
+        <div ref={headerRef} className="text-center mb-10 sm:mb-16">
+          <div className="flex items-center justify-center gap-3 mb-5 sm:mb-6">
+            <div className="w-8 sm:w-12 h-px" style={{ background: 'var(--color-unity-cyan)' }} />
             <p className="section-eyebrow">// 联系方式</p>
-            <div className="w-12 h-px" style={{ background: 'var(--color-unity-cyan)' }} />
+            <div className="w-8 sm:w-12 h-px" style={{ background: 'var(--color-unity-cyan)' }} />
           </div>
 
           <h2 className="section-title mb-6">期待与你交流</h2>
 
-          <p className="text-lg max-w-2xl mx-auto leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
+          <p className="text-sm sm:text-lg max-w-2xl mx-auto leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
             无论是项目合作、技术探讨，还是工作机会，都欢迎通过以下方式联系我。
           </p>
         </div>
 
         {/* 联系卡片 */}
-        <div ref={cardsRef} className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+        <div ref={cardsRef} className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 max-w-5xl mx-auto">
           {contacts.map((contact, index) => (
             <a
               key={contact.label}
               href={contact.href}
               target={contact.href.startsWith('mailto') ? undefined : '_blank'}
               rel="noopener noreferrer"
-              className="contact-card group relative block p-8 rounded-2xl overflow-hidden"
+              className="contact-card group relative block p-5 sm:p-8 rounded-2xl overflow-hidden"
               style={{
                 background: '#1A1A1D',
                 border: '1px solid rgba(0, 217, 255, 0.1)',
@@ -203,7 +203,7 @@ export default function ContactSectionNew() {
 
               {/* 值 */}
               <p
-                className="text-lg font-semibold mb-3 transition-colors duration-200 group-hover:text-gradient-cyan"
+                className="text-base sm:text-lg font-semibold mb-3 transition-colors duration-200 group-hover:text-gradient-cyan break-all"
                 style={{
                   color: 'var(--color-text-primary)',
                   letterSpacing: '-0.01em',
@@ -239,7 +239,7 @@ export default function ContactSectionNew() {
         </div>
 
         {/* Footer */}
-        <div className="mt-20 pt-12 border-t" style={{ borderColor: 'rgba(0, 217, 255, 0.1)' }}>
+        <div className="mt-12 sm:mt-20 pt-8 sm:pt-12 border-t" style={{ borderColor: 'rgba(0, 217, 255, 0.1)' }}>
           <div className="text-center">
             <p className="text-xs mb-1" style={{ color: 'var(--color-text-tertiary)' }}>
               © 2025 SBOXM. Built with Unity3D · Next.js · Three.js · GSAP

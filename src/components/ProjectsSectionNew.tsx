@@ -86,7 +86,7 @@ export default function ProjectsSectionNew() {
     <section
       ref={sectionRef}
       id="projects"
-      className="relative py-20 md:py-32 px-6 overflow-hidden"
+      className="relative py-14 sm:py-20 md:py-32 px-4 sm:px-6 overflow-hidden"
       style={{ background: '#0E0E10' }}
     >
       {/* 背景装饰 - Unity 网格 */}
@@ -94,31 +94,31 @@ export default function ProjectsSectionNew() {
 
       <div className="max-w-7xl mx-auto relative">
         {/* Header */}
-        <div ref={headerRef} className="mb-16">
+        <div ref={headerRef} className="mb-10 sm:mb-16">
           {/* 眉标 */}
-          <div className="flex items-center gap-3 mb-6">
-            <div className="w-12 h-px" style={{ background: 'var(--color-unity-cyan)' }} />
+          <div className="flex items-center gap-3 mb-5 sm:mb-6">
+            <div className="w-8 sm:w-12 h-px" style={{ background: 'var(--color-unity-cyan)' }} />
             <p className="section-eyebrow">// 精选作品</p>
           </div>
 
           {/* 标题和描述 */}
-          <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-8 mb-12">
+          <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6 lg:gap-8 mb-8 sm:mb-12">
             <div className="flex-1">
               <h2 className="section-title mb-4">
                 将现实精准映射至
                 <br />
                 <span style={{ color: 'var(--color-text-tertiary)' }}>数字维度</span>
               </h2>
-              <p className="text-base leading-relaxed max-w-xl" style={{ color: 'var(--color-text-secondary)' }}>
+              <p className="text-sm sm:text-base leading-relaxed max-w-xl" style={{ color: 'var(--color-text-secondary)' }}>
                 每一个项目都是对真实世界的精确建模，在虚拟空间中探索无限可能。
               </p>
             </div>
 
             {/* 统计数据 */}
-            <div className="flex gap-8">
+            <div className="grid grid-cols-2 gap-4 sm:flex sm:gap-8">
               <div>
                 <div
-                  className="text-4xl font-bold mb-1"
+                  className="text-3xl sm:text-4xl font-bold mb-1"
                   style={{ fontFamily: 'JetBrains Mono, monospace', color: '#00D9FF' }}
                 >
                   {projects.length}
@@ -129,7 +129,7 @@ export default function ProjectsSectionNew() {
               </div>
               <div>
                 <div
-                  className="text-4xl font-bold mb-1"
+                  className="text-3xl sm:text-4xl font-bold mb-1"
                   style={{ fontFamily: 'JetBrains Mono, monospace', color: '#00D9FF' }}
                 >
                   2+
@@ -142,12 +142,13 @@ export default function ProjectsSectionNew() {
           </div>
 
           {/* 过滤器 */}
-          <div className="flex items-center gap-3 flex-wrap">
+          <div className="-mx-4 sm:mx-0 overflow-x-auto pb-2 sm:overflow-visible">
+            <div className="flex items-center gap-2 sm:gap-3 px-4 sm:px-0 w-max sm:w-auto sm:flex-wrap">
             {filters.map((f) => (
               <button
                 key={f.key}
                 onClick={() => setFilter(f.key)}
-                className="group relative px-6 py-3 rounded-lg transition-all duration-300"
+                className="group relative shrink-0 px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg transition-all duration-300"
                 style={
                   filter === f.key
                     ? {
@@ -191,13 +192,14 @@ export default function ProjectsSectionNew() {
                 )}
               </button>
             ))}
+            </div>
           </div>
         </div>
 
         {/* 项目网格 - 响应式对齐布局 */}
         <div
           ref={gridRef}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6"
         >
           {filtered.map((project, i) => (
             <ProjectCardNew key={project.id} project={project} index={i} />
@@ -205,8 +207,8 @@ export default function ProjectsSectionNew() {
         </div>
 
         {/* 底部装饰 */}
-        <div className="mt-20 text-center">
-          <div className="inline-flex items-center gap-3 px-6 py-3 rounded-lg" style={{ background: 'rgba(0, 217, 255, 0.05)', border: '1px solid rgba(0, 217, 255, 0.1)' }}>
+        <div className="mt-12 sm:mt-20 text-center">
+          <div className="inline-flex max-w-full items-center gap-3 px-4 sm:px-6 py-3 rounded-lg" style={{ background: 'rgba(0, 217, 255, 0.05)', border: '1px solid rgba(0, 217, 255, 0.1)' }}>
             <div className="w-2 h-2 rounded-full animate-pulse" style={{ background: '#00D9FF' }} />
             <p className="text-xs" style={{ color: 'var(--color-text-tertiary)', fontFamily: 'JetBrains Mono, monospace' }}>
               持续更新中，更多项目即将呈现

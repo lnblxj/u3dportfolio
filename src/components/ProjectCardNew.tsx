@@ -148,7 +148,7 @@ export default function ProjectCardNew({ project, index }: ProjectCardNewProps) 
 
         {/* 年份标签 */}
         <div
-          className="absolute top-4 left-4 px-3 py-1 rounded-lg backdrop-blur-md"
+          className="absolute top-3 sm:top-4 left-3 sm:left-4 px-2.5 sm:px-3 py-1 rounded-lg backdrop-blur-md"
           style={{
             background: 'rgba(0, 217, 255, 0.15)',
             border: '1px solid rgba(0, 217, 255, 0.3)',
@@ -162,7 +162,7 @@ export default function ProjectCardNew({ project, index }: ProjectCardNewProps) 
 
         {/* 类别标签 */}
         <div
-          className="absolute top-4 right-4 px-3 py-1 rounded-lg backdrop-blur-md"
+          className="absolute top-3 sm:top-4 right-3 sm:right-4 px-2.5 sm:px-3 py-1 rounded-lg backdrop-blur-md"
           style={{
             background: `${categoryColor}22`,
             border: `1px solid ${categoryColor}66`,
@@ -176,7 +176,7 @@ export default function ProjectCardNew({ project, index }: ProjectCardNewProps) 
 
         {/* 图片指示器 */}
         {project.images.length > 1 && !showVideo && (
-          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
+          <div className="absolute bottom-3 sm:bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
             {project.images.map((_, i) => (
               <button
                 key={i}
@@ -195,7 +195,7 @@ export default function ProjectCardNew({ project, index }: ProjectCardNewProps) 
       </div>
 
       {/* 内容区域 */}
-      <div ref={contentRef} className="p-6">
+      <div ref={contentRef} className="p-4 sm:p-6">
         {/* 高亮标签 */}
         {project.highlight && (
           <div
@@ -209,7 +209,7 @@ export default function ProjectCardNew({ project, index }: ProjectCardNewProps) 
 
         {/* 标题 */}
         <h3
-          className="text-xl font-bold mb-2 leading-tight group-hover:text-gradient-cyan transition-all duration-300"
+          className="text-lg sm:text-xl font-bold mb-2 leading-tight group-hover:text-gradient-cyan transition-all duration-300"
           style={{
             fontFamily: 'JetBrains Mono, monospace',
             letterSpacing: '-0.01em',
@@ -224,7 +224,7 @@ export default function ProjectCardNew({ project, index }: ProjectCardNewProps) 
         </p>
 
         {/* 描述 */}
-        <p className="text-sm mb-4 leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
+        <p className="text-sm mb-4 leading-relaxed mobile-line-clamp" style={{ color: 'var(--color-text-secondary)' }}>
           {project.description}
         </p>
 
@@ -238,7 +238,7 @@ export default function ProjectCardNew({ project, index }: ProjectCardNewProps) 
         </div>
 
         {/* 操作按钮 */}
-        <div className="flex flex-wrap items-center gap-3">
+        <div className="flex flex-col min-[380px]:flex-row flex-wrap items-stretch min-[380px]:items-center gap-3">
           {project.videoUrl && (
             <button
               onClick={() => setShowVideo(!showVideo)}

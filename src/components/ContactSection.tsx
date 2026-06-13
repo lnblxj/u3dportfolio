@@ -1,5 +1,11 @@
 'use client';
 
+import { useEffect, useRef } from 'react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+gsap.registerPlugin(ScrollTrigger);
+
 const contacts = [
   {
     label: '博客',
@@ -27,7 +33,7 @@ const contacts = [
   {
     label: '邮件',
     value: 'mail@sboxm.eu.org',
-    href: 'mailto:mail@sboxm.eu.or',
+    href: 'mailto:mail@sboxm.eu.org',
     icon: (
       <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
         <rect x="2" y="4" width="16" height="12" rx="2" stroke="currentColor" strokeWidth="1.5" />
@@ -39,71 +45,188 @@ const contacts = [
 ];
 
 export default function ContactSection() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const headerRef = useRef<HTMLDivElement>(null);
+  const cardsRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      const mm = gsap.matchMedia();
+
+      mm.add(
+        {
+          reduceMotion: '(prefers-reduced-motion: reduce)',
+        },
+        (context) => {
+          const { reduceMotion } = context.conditions as { reduceMotion?: boolean };
+
+          if (reduceMotion) return;
+          gsap.set([headerRef.current, cardsRef.current], { opacity: 1 });
+
+          // 标题动画
+          gsap.from(headerRef.current, {
+            y: 60,
+            opacity: 0,
+            duration: 1,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: headerRef.current,
+              start: 'top 80%',
+              toggleActions: 'play none none none',
+            },
+          });
+
+          // 卡片动画
+          if (cardsRef.current) {
+            const cards = cardsRef.current.querySelectorAll('.contact-card');
+            gsap.from(cards, {
+              y: 80,
+              opacity: 0,
+              scale: 0.9,
+              duration: 0.8,
+              stagger: 0.2,
+              ease: 'back.out(1.7)',
+              scrollTrigger: {
+                trigger: cardsRef.current,
+                start: 'top 75%',
+                toggleActions: 'play none none none',
+              },
+            });
+          }
+        }
+      );
+
+      return () => mm.revert();
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
+
   return (
-    <section id="contact" className="py-16 md:py-32 px-6" style={{ background: '#0E0E10' }}>
-      <div className="max-w-7xl mx-auto">
-        {/* Divider */}
-        <div className="divider mb-16 md:mb-32 reveal" />
+    <section
+      ref={sectionRef}
+      id="contact"
+      className="relative py-14 sm:py-20 md:py-32 px-4 sm:px-6"
+      style={{ background: '#0E0E10' }}
+    >
+      {/* 背景装饰 */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background: 'radial-gradient(circle at 50% 0%, rgba(0, 217, 255, 0.08) 0%, transparent 50%)',
+        }}
+      />
+
+      <div className="max-w-7xl mx-auto relative">
+        {/* 分隔线 */}
+        <div className="divider mb-10 sm:mb-16 md:mb-24" />
 
         {/* Header */}
-        <div className="max-w-2xl mb-12 md:mb-20 reveal">
-          <p className="section-eyebrow mb-4">// 联系方式</p>
-          <h2 className="section-title mb-6">
-            期待与你交流
-          </h2>
-          <p className="text-lg leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
+        <div ref={headerRef} className="text-center mb-10 sm:mb-16">
+          <div className="flex items-center justify-center gap-3 mb-5 sm:mb-6">
+            <div className="w-8 sm:w-12 h-px" style={{ background: 'var(--color-unity-cyan)' }} />
+            <p className="section-eyebrow">// 联系方式</p>
+            <div className="w-8 sm:w-12 h-px" style={{ background: 'var(--color-unity-cyan)' }} />
+          </div>
+
+          <h2 className="section-title mb-6">期待与你交流</h2>
+
+          <p className="text-sm sm:text-lg max-w-2xl mx-auto leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
             无论是项目合作、技术探讨，还是工作机会，都欢迎通过以下方式联系我。
           </p>
         </div>
 
-        {/* Contact cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-px stagger-children"
-          style={{ background: 'rgba(0, 217, 255, 0.1)' }}>
+        {/* 联系卡片 */}
+        <div ref={cardsRef} className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 max-w-5xl mx-auto">
           {contacts.map((contact) => (
             <a
               key={contact.label}
               href={contact.href}
               target={contact.href.startsWith('mailto') ? undefined : '_blank'}
               rel="noopener noreferrer"
-              className="block p-8 group"
+              className="contact-card group relative flex min-h-[260px] flex-col p-6 sm:min-h-[290px] sm:p-8 rounded-2xl overflow-hidden"
               style={{
                 background: '#1A1A1D',
+                border: '1px solid rgba(0, 217, 255, 0.1)',
                 textDecoration: 'none',
-                transition: 'background 0.2s ease',
+                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
               }}
-              onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.background = 'rgba(0, 217, 255, 0.05)')}
-              onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.background = '#1A1A1D')}
+              onMouseEnter={(e) => {
+                gsap.to(e.currentTarget, {
+                  y: -8,
+                  boxShadow: '0 20px 50px rgba(0, 217, 255, 0.2)',
+                  borderColor: 'rgba(0, 217, 255, 0.4)',
+                  duration: 0.3,
+                });
+              }}
+              onMouseLeave={(e) => {
+                gsap.to(e.currentTarget, {
+                  y: 0,
+                  boxShadow: 'none',
+                  borderColor: 'rgba(0, 217, 255, 0.1)',
+                  duration: 0.3,
+                });
+              }}
             >
-              {/* Icon */}
-              <div className="w-10 h-10 rounded-lg flex items-center justify-center mb-6 transition-all duration-200"
+              {/* 背景发光 */}
+              <div
+                className="absolute top-0 right-0 w-40 h-40 rounded-full blur-3xl opacity-0 group-hover:opacity-20 transition-opacity duration-500"
+                style={{ background: '#00D9FF' }}
+              />
+
+              {/* 图标 */}
+              <div
+                className="flex h-8 w-8 items-center justify-start mb-5 transition-all duration-300 group-hover:scale-110"
                 style={{
-                  background: 'rgba(0, 217, 255, 0.1)',
-                  border: '1px solid rgba(0, 217, 255, 0.2)',
-                  color: 'var(--color-unity-cyan)',
-                }}>
+                  color: '#00D9FF',
+                }}
+              >
                 {contact.icon}
               </div>
 
-              {/* Label */}
-              <p className="text-xs font-semibold mb-2"
-                style={{ color: 'var(--color-text-tertiary)', letterSpacing: '0.1em', textTransform: 'uppercase', fontFamily: 'JetBrains Mono, monospace' }}>
+              {/* 标签 */}
+              <p
+                className="text-xs font-bold mb-3"
+                style={{
+                  color: 'var(--color-text-tertiary)',
+                  letterSpacing: '0.1em',
+                  textTransform: 'uppercase',
+                  fontFamily: 'JetBrains Mono, monospace',
+                }}
+              >
                 {contact.label}
               </p>
 
-              {/* Value */}
-              <p className="text-base font-medium mb-2 transition-colors duration-200"
-                style={{ color: 'var(--color-text-primary)', letterSpacing: '-0.01em' }}>
+              {/* 值 */}
+              <p
+                className="text-base sm:text-lg font-semibold mb-3 transition-colors duration-200 group-hover:text-gradient-cyan break-all"
+                style={{
+                  color: 'var(--color-text-primary)',
+                  letterSpacing: '-0.01em',
+                  fontFamily: 'JetBrains Mono, monospace',
+                }}
+              >
                 {contact.value}
               </p>
 
-              {/* Description */}
-              <p className="text-xs" style={{ color: 'var(--color-text-secondary)' }}>
+              {/* 描述 */}
+              <p className="text-sm leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
                 {contact.description}
               </p>
 
-              {/* Arrow */}
-              <div className="mt-6 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style={{ color: 'var(--color-unity-cyan)' }}>
+              {/* 箭头 */}
+              <div className="flex items-center gap-2 mt-auto pt-6 opacity-60 group-hover:opacity-100 transition-all duration-300">
+                <span className="text-xs font-semibold" style={{ color: '#00D9FF', fontFamily: 'JetBrains Mono, monospace' }}>
+                  访问
+                </span>
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 16 16"
+                  fill="none"
+                  className="transition-transform group-hover:translate-x-1"
+                  style={{ color: '#00D9FF' }}
+                >
                   <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
               </div>
@@ -112,14 +235,15 @@ export default function ContactSection() {
         </div>
 
         {/* Footer */}
-        <div className="mt-16 md:mt-24 pt-8 divider reveal" />
-        <div className="mt-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 reveal">
-          <p className="text-xs" style={{ color: 'var(--color-text-tertiary)', letterSpacing: '-0.01em', opacity: 0.6 }}>
-            © 2025 SBOXM. Built with Unity3D · Next.js · Three.js
-          </p>
-          <p className="text-xs font-mono" style={{ color: 'var(--color-text-tertiary)', opacity: 0.5 }}>
-            Virtual Simulation &amp; Digital Twin Direction
-          </p>
+        <div className="mt-12 sm:mt-20 pt-8 sm:pt-12 border-t" style={{ borderColor: 'rgba(0, 217, 255, 0.1)' }}>
+          <div className="text-center">
+            <p className="text-xs mb-1" style={{ color: 'var(--color-text-tertiary)' }}>
+              © 2026 SBOXM. Built with Unity3D · Next.js · Three.js · GSAP
+            </p>
+            <p className="text-xs" style={{ color: 'var(--color-text-tertiary)', opacity: 0.5 }}>
+              Designed with ❤️ for the virtual world
+            </p>
+          </div>
         </div>
       </div>
     </section>

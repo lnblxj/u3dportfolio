@@ -2,11 +2,10 @@
 
 import { useState } from 'react';
 import NavBar from '@/components/NavBar';
-import HeroSectionNew from '@/components/HeroSectionNew';
-import ProjectsSectionNew from '@/components/ProjectsSectionNew';
-import SkillsSectionMarquee from '@/components/SkillsSectionMarquee';
-import ContactSectionNew from '@/components/ContactSectionNew';
-import ScrollRevealInit from '@/components/ScrollRevealInit';
+import HeroSection from '@/components/HeroSection';
+import ProjectsSection from '@/components/ProjectsSection';
+import SkillsSection from '@/components/SkillsSection';
+import ContactSection from '@/components/ContactSection';
 import LoadingScreen from '@/components/LoadingScreen';
 
 export default function HomePage() {
@@ -19,12 +18,11 @@ export default function HomePage() {
 
   return (
     <main className="relative overflow-x-hidden" style={{ background: '#0E0E10', color: '#E8E8E8' }}>
-      <ScrollRevealInit />
       <NavBar />
-      <HeroSectionNew />
-      <ProjectsSectionNew />
-      <SkillsSectionMarquee />
-      <ContactSectionNew />
+      <HeroSection />
+      <ProjectsSection />
+      <SkillsSection />
+      <ContactSection />
     </main>
   );
 }

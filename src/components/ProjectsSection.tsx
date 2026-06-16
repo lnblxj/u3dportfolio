@@ -115,16 +115,16 @@ export default function ProjectsSection() {
             </div>
 
             {/* 统计数据 */}
-            <div className="grid grid-cols-2 gap-4 sm:flex sm:gap-8">
+            <div className="grid grid-cols-3 gap-4 sm:flex sm:gap-8">
               <div>
                 <div
                   className="text-3xl sm:text-4xl font-bold mb-1"
                   style={{ fontFamily: 'JetBrains Mono, monospace', color: '#00D9FF' }}
                 >
-                  {projects.length}
+                  10+
                 </div>
                 <div className="text-xs" style={{ color: 'var(--color-text-tertiary)' }}>
-                  已完成项目
+                  已构建项目
                 </div>
               </div>
               <div>
@@ -132,10 +132,21 @@ export default function ProjectsSection() {
                   className="text-3xl sm:text-4xl font-bold mb-1"
                   style={{ fontFamily: 'JetBrains Mono, monospace', color: '#00D9FF' }}
                 >
-                  2+
+                  2年+
                 </div>
                 <div className="text-xs" style={{ color: 'var(--color-text-tertiary)' }}>
-                  应用领域
+                  Unity3D 经验
+                </div>
+              </div>
+              <div>
+                <div
+                  className="text-3xl sm:text-4xl font-bold mb-1"
+                  style={{ fontFamily: 'JetBrains Mono, monospace', color: '#00D9FF' }}
+                >
+                  1项
+                </div>
+                <div className="text-xs" style={{ color: 'var(--color-text-tertiary)' }}>
+                  知识产权
                 </div>
               </div>
             </div>

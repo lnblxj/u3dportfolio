@@ -102,23 +102,42 @@ export default function ProjectCard({ project, index }: ProjectCardProps) {
     return () => clearInterval(timer);
   }, [showVideo, project.images.length]);
 
+  // 图片切换动画
+  useEffect(() => {
+    if (showVideo || !imageRef.current) return;
+    const sliderContainer = imageRef.current.querySelector('.slider-wrapper');
+    if (sliderContainer) {
+      gsap.to(sliderContainer, {
+        x: `-${activeImage * 100}%`,
+        duration: 0.6,
+        ease: 'power2.inOut',
+      });
+    }
+  }, [activeImage, showVideo]);
+
   const categoryLabel = project.category === 'digital-twin' ? '数字孪生' : '虚拟仿真';
   const categoryColor = project.category === 'digital-twin' ? '#60A5FA' : '#A78BFA';
 
   return (
     <div
       ref={cardRef}
-      className="group relative w-full rounded-2xl overflow-hidden cursor-pointer"
+      className="group relative w-full rounded-2xl overflow-hidden cursor-pointer transition-colors duration-300"
       style={{
-        background: '#1A1A1D',
+        background: '#0E0E10',
         border: '1px solid rgba(0, 217, 255, 0.1)',
         transformStyle: 'preserve-3d',
+      }}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.background = '#1A1A1D';
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.background = '#0E0E10';
       }}
     >
       {/* 图片容器 */}
       <div
         ref={imageRef}
-        className="relative w-full aspect-video overflow-hidden"
+        className="relative w-full aspect-video overflow-hidden bg-black"
       >
         {showVideo && project.videoUrl ? (
           <video
@@ -130,15 +149,36 @@ export default function ProjectCard({ project, index }: ProjectCardProps) {
           />
         ) : (
           <>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={project.images[activeImage]}
-              alt={project.title}
-              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-            />
+            {/* 图片滑动轨道 */}
+            <div className="slider-wrapper flex h-full" style={{ width: '100%' }}>
+              {project.images.map((img, i) => (
+                <div
+                  key={i}
+                  className="slider-item flex-shrink-0 w-full h-full relative overflow-hidden"
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={img}
+                    alt={`${project.title} - ${i + 1}`}
+                    className="w-full h-full object-cover transition-transform duration-700"
+                    style={{
+                      transform: i === activeImage ? 'scale(1)' : 'scale(1)',
+                    }}
+                    onMouseEnter={(e) => {
+                      if (i === activeImage) {
+                        e.currentTarget.style.transform = 'scale(1.1)';
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.transform = 'scale(1)';
+                    }}
+                  />
+                </div>
+              ))}
+            </div>
             {/* 渐变遮罩 */}
             <div
-              className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+              className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
               style={{
                 background: 'linear-gradient(to top, rgba(14,14,16,0.8) 0%, transparent 50%)',
               }}
@@ -176,7 +216,7 @@ export default function ProjectCard({ project, index }: ProjectCardProps) {
 
         {/* 图片指示器 */}
         {project.images.length > 1 && !showVideo && (
-          <div className="absolute bottom-3 sm:bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
+          <div className="absolute bottom-3 sm:bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-10">
             {project.images.map((_, i) => (
               <button
                 key={i}
@@ -202,7 +242,6 @@ export default function ProjectCard({ project, index }: ProjectCardProps) {
             className="inline-flex items-center gap-2 mb-3 text-xs"
             style={{ color: 'var(--color-text-tertiary)', fontFamily: 'JetBrains Mono, monospace' }}
           >
-            <div className="w-1.5 h-1.5 rounded-full" style={{ background: '#00D9FF' }} />
             {project.highlight}
           </div>
         )}

@@ -10,16 +10,22 @@ import LoadingScreen from '@/components/LoadingScreen';
 
 export default function HomePage() {
   const [isLoaded, setIsLoaded] = useState(false);
-  const heroImageUrl = 'https://img.sboxm.top/unity/hero.jpg';
+  const [vrReady, setVRReady] = useState(false);
 
   if (!isLoaded) {
-    return <LoadingScreen onComplete={() => setIsLoaded(true)} heroImageUrl={heroImageUrl} />;
+    return (
+      <LoadingScreen
+        onComplete={() => setIsLoaded(true)}
+        onVRReady={() => setVRReady(true)}
+        vrReady={vrReady}
+      />
+    );
   }
 
   return (
     <main className="relative overflow-x-hidden" style={{ background: '#0E0E10', color: '#E8E8E8' }}>
       <NavBar />
-      <HeroSection />
+      <HeroSection onVRReady={() => setVRReady(true)} />
       <ProjectsSection />
       <SkillsSection />
       <ContactSection />

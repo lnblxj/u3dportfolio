@@ -4,7 +4,11 @@ import { useEffect, useRef } from 'react';
 
 const LOW_RES_URL = 'https://img.sboxm.top/unity/hero.jpg';
 
-export default function VRHeroBackground() {
+interface VRHeroBackgroundProps {
+  onReady?: () => void;
+}
+
+export default function VRHeroBackground({ onReady }: VRHeroBackgroundProps) {
   const mountRef = useRef<HTMLDivElement>(null);
   const stateRef = useRef({
     scene: null as import('three').Scene | null,
@@ -28,7 +32,11 @@ export default function VRHeroBackground() {
 
   useEffect(() => {
     const isMobile = window.innerWidth <= 768;
-    if (isMobile) return; // mobile uses static background
+    if (isMobile) {
+      // Mobile uses static background, signal ready immediately
+      onReady?.();
+      return;
+    }
 
     let destroyed = false;
     const s = stateRef.current;
@@ -61,7 +69,22 @@ export default function VRHeroBackground() {
       const geometry = new THREE.SphereGeometry(500, 60, 40);
       geometry.scale(-1, 1, 1); // flip inside out
 
-      const lowResTexture = new THREE.TextureLoader().load(LOW_RES_URL);
+      const lowResTexture = new THREE.TextureLoader().load(
+        LOW_RES_URL,
+        () => {
+          // Texture loaded, perform first render, then signal ready
+          if (!destroyed && s.scene && s.camera && s.renderer) {
+            s.renderer.render(s.scene, s.camera);
+            onReady?.();
+          }
+        },
+        undefined,
+        (error) => {
+          console.error('Failed to load VR texture:', error);
+          // Even on error, signal ready to prevent infinite loading
+          onReady?.();
+        }
+      );
       lowResTexture.colorSpace = THREE.SRGBColorSpace;
       const material = new THREE.MeshBasicMaterial({ map: lowResTexture });
       const sphere = new THREE.Mesh(geometry, material);

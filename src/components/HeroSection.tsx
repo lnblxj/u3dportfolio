@@ -6,26 +6,14 @@ import dynamic from 'next/dynamic';
 
 const VRHeroBackground = dynamic(() => import('./VRHeroBackground'), {
   ssr: false,
-  loading: () => (
-    <div
-      className="absolute inset-0"
-      style={{
-        background: '#0a0a0a',
-        backgroundImage: `url('https://img.sboxm.top/unity/hero.jpg')`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center 40%',
-      }}
-    />
-  ),
 });
 
-export default function HeroSection() {
+export default function HeroSection({ onVRReady }: { onVRReady?: () => void }) {
   const sectionRef = useRef<HTMLElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
   const subtitleRef = useRef<HTMLParagraphElement>(null);
   const ctaRef = useRef<HTMLDivElement>(null);
   const gridLinesRef = useRef<HTMLDivElement>(null);
-  const statsRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -40,7 +28,7 @@ export default function HeroSection() {
           const { isDesktop, reduceMotion } = context.conditions as { isDesktop?: boolean; reduceMotion?: boolean };
 
           if (reduceMotion) {
-            gsap.set([titleRef.current, subtitleRef.current, ctaRef.current, statsRef.current], {
+            gsap.set([titleRef.current, subtitleRef.current, ctaRef.current], {
               opacity: 1,
               y: 0,
             });
@@ -107,21 +95,6 @@ export default function HeroSection() {
             '-=0.2'
           );
 
-          if (statsRef.current) {
-            const statItems = statsRef.current.querySelectorAll('.stat-item');
-            tl.from(
-              statItems,
-              {
-                x: isDesktop ? -50 : 0,
-                y: isDesktop ? 0 : 30,
-                opacity: 0,
-                duration: 0.8,
-                stagger: 0.15,
-              },
-              '-=0.3'
-            );
-          }
-
           gsap.to(titleRef.current, {
             y: -10,
             duration: 2,
@@ -151,7 +124,7 @@ export default function HeroSection() {
       className="relative w-full overflow-hidden"
       style={{ height: '100svh', minHeight: 'min(700px, 100svh)' }}
     >
-      <VRHeroBackground />
+      <VRHeroBackground onReady={onVRReady} />
 
       <div
         className="absolute inset-0 z-10 pointer-events-none"
@@ -191,7 +164,7 @@ export default function HeroSection() {
       </div>
 
       <div className="relative z-20 h-full max-w-7xl mx-auto px-4 sm:px-6">
-        <div className="h-full flex flex-col lg:flex-row items-center justify-center lg:justify-between gap-6 sm:gap-8 lg:gap-12">
+        <div className="h-full flex items-center justify-center">
           <div className="flex-1 flex flex-col justify-center lg:pt-0 pt-16 sm:pt-20">
             <div className="flex items-center gap-2 mb-5 sm:mb-8">
               <span className="glow-dot" />
@@ -211,7 +184,6 @@ export default function HeroSection() {
               ref={titleRef}
               className="text-[clamp(2.25rem,12vw,3.5rem)] md:text-6xl lg:text-7xl font-bold mb-4 sm:mb-6 leading-tight"
               style={{
-                fontFamily: 'JetBrains Mono, monospace',
                 letterSpacing: '-0.02em',
               }}
             >
@@ -256,47 +228,6 @@ export default function HeroSection() {
               <a href="#contact" className="btn-ghost">
                 联系我
               </a>
-            </div>
-          </div>
-
-          <div
-            ref={statsRef}
-            className="hidden sm:grid grid-cols-3 lg:flex lg:flex-col gap-3 lg:gap-4 w-full lg:w-auto lg:min-w-[280px]"
-          >
-            <div className="stat-item frosted-card rounded-2xl p-4 lg:p-6 backdrop-blur-xl">
-              <div className="text-2xl lg:text-4xl font-bold mb-1 lg:mb-2" style={{ fontFamily: 'JetBrains Mono, monospace', color: '#00D9FF' }}>
-                10+
-              </div>
-              <div className="text-sm font-semibold mb-1" style={{ color: 'var(--color-text-primary)' }}>
-                已构建项目
-              </div>
-              <div className="text-xs" style={{ color: 'var(--color-text-tertiary)' }}>
-                覆盖教育 · 工业 · 城市
-              </div>
-            </div>
-
-            <div className="stat-item frosted-card rounded-2xl p-4 lg:p-6 backdrop-blur-xl">
-              <div className="text-2xl lg:text-4xl font-bold mb-1 lg:mb-2" style={{ fontFamily: 'JetBrains Mono, monospace', color: '#00D9FF' }}>
-                2年+
-              </div>
-              <div className="text-sm font-semibold mb-1" style={{ color: 'var(--color-text-primary)' }}>
-                Unity3D 经验
-              </div>
-              <div className="text-xs" style={{ color: 'var(--color-text-tertiary)' }}>
-                虚拟仿真与数字孪生
-              </div>
-            </div>
-
-            <div className="stat-item frosted-card rounded-2xl p-4 lg:p-6 backdrop-blur-xl">
-              <div className="text-2xl lg:text-4xl font-bold mb-1 lg:mb-2" style={{ fontFamily: 'JetBrains Mono, monospace', color: '#00D9FF' }}>
-                1项
-              </div>
-              <div className="text-sm font-semibold mb-1" style={{ color: 'var(--color-text-primary)' }}>
-                知识产权
-              </div>
-              <div className="text-xs" style={{ color: 'var(--color-text-tertiary)' }}>
-                软著及发明专利
-              </div>
             </div>
           </div>
         </div>

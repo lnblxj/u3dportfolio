@@ -49,7 +49,7 @@ body {
   overflow-x: hidden;
   background: var(--color-base);
   color: var(--color-text-primary);
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', 'Hiragino Sans GB', 'WenQuanYi Micro Hei', sans-serif;
 }
 
 /* VR Canvas container */
@@ -216,7 +216,6 @@ body {
   letter-spacing: -0.03em;
   line-height: 1.1;
   color: var(--color-text-primary);
-  font-family: 'JetBrains Mono', monospace;
 }
 
 /* Loading bar */

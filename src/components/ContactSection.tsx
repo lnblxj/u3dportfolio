@@ -48,9 +48,85 @@ export default function ContactSection() {
   const sectionRef = useRef<HTMLElement>(null);
   const headerRef = useRef<HTMLDivElement>(null);
   const cardsRef = useRef<HTMLDivElement>(null);
+  const blobsRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
+      // 背景 blob 动画 - 围绕圆心旋转
+      if (blobsRef.current) {
+        const blobs = blobsRef.current.querySelectorAll('.blob');
+
+        // 第一组 - 围绕共同圆心旋转
+        // Blob 0 - 逆时针旋转 + 半径变化
+        const blob0InitialRadius = 80;
+        gsap.to({}, {
+          duration: 5,
+          repeat: -1,
+          ease: 'none',
+          onUpdate: function() {
+            const progress = this.progress();
+            const angle = -progress * Math.PI * 2; // 逆时针
+            const radiusOffset = Math.sin(progress * Math.PI * 4) * 30; // 半径动态变化
+            const radius = blob0InitialRadius + radiusOffset;
+            const x = Math.cos(angle) * radius;
+            const y = Math.sin(angle) * radius;
+            gsap.set(blobs[0], { x, y });
+          }
+        });
+
+        // Blob 1 - 逆时针旋转 + 半径变化（不同相位）
+        const blob1InitialRadius = 60;
+        gsap.to({}, {
+          duration: 6.25,
+          repeat: -1,
+          ease: 'none',
+          onUpdate: function() {
+            const progress = this.progress();
+            const angle = -progress * Math.PI * 2 + Math.PI; // 逆时针，起始位置偏移
+            const radiusOffset = Math.sin(progress * Math.PI * 3) * 40;
+            const radius = blob1InitialRadius + radiusOffset;
+            const x = Math.cos(angle) * radius;
+            const y = Math.sin(angle) * radius;
+            gsap.set(blobs[1], { x, y });
+          }
+        });
+
+        // 第二组 - 围绕共同圆心旋转
+        // Blob 2 - 逆时针旋转 + 半径变化
+        const blob2InitialRadius = 70;
+        gsap.to({}, {
+          duration: 5.5,
+          repeat: -1,
+          ease: 'none',
+          onUpdate: function() {
+            const progress = this.progress();
+            const angle = -progress * Math.PI * 2 + Math.PI * 0.5;
+            const radiusOffset = Math.sin(progress * Math.PI * 5) * 35;
+            const radius = blob2InitialRadius + radiusOffset;
+            const x = Math.cos(angle) * radius;
+            const y = Math.sin(angle) * radius;
+            gsap.set(blobs[2], { x, y });
+          }
+        });
+
+        // Blob 3 - 逆时针旋转 + 半径变化
+        const blob3InitialRadius = 55;
+        gsap.to({}, {
+          duration: 7,
+          repeat: -1,
+          ease: 'none',
+          onUpdate: function() {
+            const progress = this.progress();
+            const angle = -progress * Math.PI * 2 - Math.PI * 0.5;
+            const radiusOffset = Math.sin(progress * Math.PI * 4) * 25;
+            const radius = blob3InitialRadius + radiusOffset;
+            const x = Math.cos(angle) * radius;
+            const y = Math.sin(angle) * radius;
+            gsap.set(blobs[3], { x, y });
+          }
+        });
+      }
+
       const mm = gsap.matchMedia();
 
       mm.add(
@@ -106,14 +182,49 @@ export default function ContactSection() {
     <section
       ref={sectionRef}
       id="contact"
-      className="relative py-14 sm:py-20 md:py-32 px-4 sm:px-6"
+      className="relative py-14 sm:py-20 md:py-32 px-4 sm:px-6 overflow-hidden"
       style={{ background: '#0E0E10' }}
     >
-      {/* 背景装饰 */}
+      {/* 动画背景元素 - SVG */}
+      <div ref={blobsRef} className="absolute inset-0 pointer-events-none opacity-70">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 1920 1080"
+          preserveAspectRatio="none"
+          style={{ width: '100%', height: '100%' }}
+        >
+          <defs>
+            <filter id="blob-blur">
+              <feGaussianBlur in="SourceGraphic" stdDeviation="40" />
+            </filter>
+          </defs>
+
+          {/* 第一组 - 左侧偏上 */}
+          <g className="blob" filter="url(#blob-blur)">
+            <circle cx="300" cy="350" r="160" fill="rgb(225, 102, 182)" fillOpacity="0.8" />
+          </g>
+
+          <g className="blob" filter="url(#blob-blur)">
+            <circle cx="420" cy="420" r="130" fill="rgb(187, 107, 240)" fillOpacity="0.7" />
+          </g>
+
+          {/* 第二组 - 右侧偏下 */}
+          <g className="blob" filter="url(#blob-blur)">
+            <circle cx="1600" cy="620" r="145" fill="rgb(255, 198, 163)" fillOpacity="0.8" />
+          </g>
+
+          <g className="blob" filter="url(#blob-blur)">
+            <circle cx="1500" cy="700" r="120" fill="rgb(0, 217, 255)" fillOpacity="0.7" />
+          </g>
+        </svg>
+      </div>
+
+      {/* 毛玻璃覆盖层 */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
-          background: 'radial-gradient(circle at 50% 0%, rgba(0, 217, 255, 0.08) 0%, transparent 50%)',
+          backdropFilter: 'blur(80px)',
+          WebkitBackdropFilter: 'blur(80px)',
         }}
       />
 
@@ -144,33 +255,17 @@ export default function ContactSection() {
               href={contact.href}
               target={contact.href.startsWith('mailto') ? undefined : '_blank'}
               rel="noopener noreferrer"
-              className="contact-card group relative flex min-h-[260px] flex-col p-6 sm:min-h-[290px] sm:p-8 rounded-2xl overflow-hidden"
+              className="contact-card group relative flex min-h-[200px] flex-col p-6 sm:min-h-[220px] sm:p-8 rounded-2xl overflow-hidden"
               style={{
-                background: '#1A1A1D',
-                border: '1px solid rgba(0, 217, 255, 0.1)',
+                background: 'rgba(255, 255, 255, 0.08)',
+                backdropFilter: 'blur(40px) saturate(180%)',
+                WebkitBackdropFilter: 'blur(40px) saturate(180%)',
                 textDecoration: 'none',
-                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-              }}
-              onMouseEnter={(e) => {
-                gsap.to(e.currentTarget, {
-                  y: -8,
-                  boxShadow: '0 20px 50px rgba(0, 217, 255, 0.2)',
-                  borderColor: 'rgba(0, 217, 255, 0.4)',
-                  duration: 0.3,
-                });
-              }}
-              onMouseLeave={(e) => {
-                gsap.to(e.currentTarget, {
-                  y: 0,
-                  boxShadow: 'none',
-                  borderColor: 'rgba(0, 217, 255, 0.1)',
-                  duration: 0.3,
-                });
               }}
             >
               {/* 背景发光 */}
               <div
-                className="absolute top-0 right-0 w-40 h-40 rounded-full blur-3xl opacity-0 group-hover:opacity-20 transition-opacity duration-500"
+                className="absolute top-0 right-0 w-40 h-40 rounded-full blur-3xl opacity-10"
                 style={{ background: '#00D9FF' }}
               />
 
@@ -178,7 +273,7 @@ export default function ContactSection() {
               <div
                 className="flex h-8 w-8 items-center justify-start mb-5 transition-all duration-300 group-hover:scale-110"
                 style={{
-                  color: '#00D9FF',
+                  color: '#FFFFFF',
                 }}
               >
                 {contact.icon}
@@ -186,9 +281,9 @@ export default function ContactSection() {
 
               {/* 标签 */}
               <p
-                className="text-xs font-bold mb-3"
+                className="text-xl font-bold mb-3"
                 style={{
-                  color: 'var(--color-text-tertiary)',
+                  color: '#FFFFFF',
                   letterSpacing: '0.1em',
                   textTransform: 'uppercase',
                   fontFamily: 'JetBrains Mono, monospace',
@@ -197,34 +292,22 @@ export default function ContactSection() {
                 {contact.label}
               </p>
 
-              {/* 值 */}
-              <p
-                className="text-base sm:text-lg font-semibold mb-3 transition-colors duration-200 group-hover:text-gradient-cyan break-all"
-                style={{
-                  color: 'var(--color-text-primary)',
-                  letterSpacing: '-0.01em',
-                  fontFamily: 'JetBrains Mono, monospace',
-                }}
-              >
-                {contact.value}
-              </p>
-
               {/* 描述 */}
-              <p className="text-sm leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
+              <p className="text-xs leading-relaxed mb-6" style={{ color: 'var(--color-text-secondary)' }}>
                 {contact.description}
               </p>
 
-              {/* 箭头 */}
-              <div className="flex items-center gap-2 mt-auto pt-6 opacity-60 group-hover:opacity-100 transition-all duration-300">
-                <span className="text-xs font-semibold" style={{ color: '#00D9FF', fontFamily: 'JetBrains Mono, monospace' }}>
-                  访问
+              {/* 链接 + 箭头 */}
+              <div className="flex items-center gap-2 mt-auto">
+                <span className="text-sm font-semibold break-all" style={{ color: '#00D9FF', fontFamily: 'JetBrains Mono, monospace' }}>
+                  {contact.value}
                 </span>
                 <svg
                   width="16"
                   height="16"
                   viewBox="0 0 16 16"
                   fill="none"
-                  className="transition-transform group-hover:translate-x-1"
+                  className="flex-shrink-0"
                   style={{ color: '#00D9FF' }}
                 >
                   <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
@@ -241,7 +324,7 @@ export default function ContactSection() {
               © 2026 SBOXM. Built with Unity3D · Next.js · Three.js · GSAP
             </p>
             <p className="text-xs" style={{ color: 'var(--color-text-tertiary)', opacity: 0.5 }}>
-              Designed with ❤️ for the virtual world
+              Designed with for the virtual world
             </p>
           </div>
         </div>

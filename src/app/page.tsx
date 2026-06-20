@@ -23,7 +23,14 @@ export default function HomePage() {
   }
 
   return (
-    <main className="relative overflow-x-hidden" style={{ background: '#0E0E10', color: '#E8E8E8' }}>
+    <main
+      className="relative overflow-x-hidden"
+      style={{
+        background:
+          'radial-gradient(circle at top left, rgba(255, 255, 255, 0.06), transparent 34%), linear-gradient(180deg, #101014 0%, #18181c 100%)',
+        color: '#f4f7fa',
+      }}
+    >
       <NavBar />
       <HeroSection onVRReady={() => setVRReady(true)} />
       <ProjectsSection />

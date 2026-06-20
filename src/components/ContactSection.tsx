@@ -214,7 +214,7 @@ export default function ContactSection() {
           </g>
 
           <g className="blob" filter="url(#blob-blur)">
-            <circle cx="1500" cy="700" r="120" fill="rgb(0, 217, 255)" fillOpacity="0.7" />
+            <circle cx="1500" cy="700" r="120" fill="rgb(255, 255, 255)" fillOpacity="0.36" />
           </g>
         </svg>
       </div>
@@ -266,7 +266,7 @@ export default function ContactSection() {
               {/* 背景发光 */}
               <div
                 className="absolute top-0 right-0 w-40 h-40 rounded-full blur-3xl opacity-10"
-                style={{ background: '#00D9FF' }}
+                style={{ background: '#FFFFFF' }}
               />
 
               {/* 图标 */}
@@ -299,7 +299,7 @@ export default function ContactSection() {
 
               {/* 链接 + 箭头 */}
               <div className="flex items-center gap-2 mt-auto">
-                <span className="text-sm font-semibold break-all" style={{ color: '#00D9FF', fontFamily: 'JetBrains Mono, monospace' }}>
+                <span className="text-sm font-semibold break-all" style={{ color: 'var(--color-text-primary)', fontFamily: 'JetBrains Mono, monospace' }}>
                   {contact.value}
                 </span>
                 <svg
@@ -308,7 +308,7 @@ export default function ContactSection() {
                   viewBox="0 0 16 16"
                   fill="none"
                   className="flex-shrink-0"
-                  style={{ color: '#00D9FF' }}
+                  style={{ color: 'var(--color-text-primary)' }}
                 >
                   <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
@@ -318,7 +318,7 @@ export default function ContactSection() {
         </div>
 
         {/* Footer */}
-        <div className="mt-12 sm:mt-20 pt-8 sm:pt-12 border-t" style={{ borderColor: 'rgba(0, 217, 255, 0.1)' }}>
+        <div className="mt-12 sm:mt-20 pt-8 sm:pt-12 border-t" style={{ borderColor: 'rgba(255, 255, 255, 0.12)' }}>
           <div className="text-center">
             <p className="text-xs mb-1" style={{ color: 'var(--color-text-tertiary)' }}>
               © 2026 SBOXM. Built with Unity3D · Next.js · Three.js · GSAP

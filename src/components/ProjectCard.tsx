@@ -116,7 +116,7 @@ export default function ProjectCard({ project, index }: ProjectCardProps) {
   }, [activeImage, showVideo]);
 
   const categoryLabel = project.category === 'digital-twin' ? '数字孪生' : '虚拟仿真';
-  const categoryColor = project.category === 'digital-twin' ? '#60A5FA' : '#A78BFA';
+  const categoryColor = project.category === 'digital-twin' ? '#F4F7FA' : '#B8B8C2';
 
   return (
     <div
@@ -124,7 +124,7 @@ export default function ProjectCard({ project, index }: ProjectCardProps) {
       className="group relative w-full rounded-2xl overflow-hidden cursor-pointer transition-colors duration-300"
       style={{
         background: '#0E0E10',
-        border: '1px solid rgba(0, 217, 255, 0.1)',
+        border: '1px solid rgba(255, 255, 255, 0.12)',
         transformStyle: 'preserve-3d',
       }}
       onMouseEnter={(e) => {
@@ -190,11 +190,11 @@ export default function ProjectCard({ project, index }: ProjectCardProps) {
         <div
           className="absolute top-3 sm:top-4 left-3 sm:left-4 px-2.5 sm:px-3 py-1 rounded-lg backdrop-blur-md"
           style={{
-            background: 'rgba(0, 217, 255, 0.15)',
-            border: '1px solid rgba(0, 217, 255, 0.3)',
+            background: 'rgba(255, 255, 255, 0.1)',
+            border: '1px solid rgba(255, 255, 255, 0.24)',
             fontFamily: 'JetBrains Mono, monospace',
             fontSize: '12px',
-            color: '#00D9FF',
+            color: 'var(--color-text-primary)',
           }}
         >
           {project.year}
@@ -225,7 +225,7 @@ export default function ProjectCard({ project, index }: ProjectCardProps) {
                 style={{
                   width: i === activeImage ? '24px' : '8px',
                   height: '8px',
-                  background: i === activeImage ? '#00D9FF' : 'rgba(255,255,255,0.3)',
+                  background: i === activeImage ? '#fff' : 'rgba(255,255,255,0.3)',
                 }}
                 aria-label={`Image ${i + 1}`}
               />
@@ -330,7 +330,7 @@ export default function ProjectCard({ project, index }: ProjectCardProps) {
       <div
         className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
         style={{
-          boxShadow: '0 0 30px rgba(0, 217, 255, 0.3)',
+          boxShadow: '0 0 30px rgba(255, 255, 255, 0.18)',
         }}
       />
     </div>

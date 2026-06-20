@@ -100,7 +100,7 @@ export default function HeroSection({ onVRReady }: { onVRReady?: () => void }) {
             duration: 2,
             repeat: -1,
             yoyo: true,
-            ease: 'sine.inOut',
+            ease: 'power1.in',
           });
         }
       );
@@ -130,9 +130,11 @@ export default function HeroSection({ onVRReady }: { onVRReady?: () => void }) {
         className="absolute inset-0 z-10 pointer-events-none"
         style={{
           background:
-            'linear-gradient(to bottom, rgba(14,14,16,0.3) 0%, rgba(14,14,16,0.1) 30%, rgba(14,14,16,0.6) 70%, rgba(14,14,16,0.95) 95%, #0E0E10 100%)',
+            'linear-gradient(to bottom, rgba(16,16,20,0.26) 0%, rgba(16,16,20,0.08) 34%, rgba(16,16,20,0.58) 76%, rgba(16,16,20,0.95) 96%, #101014 100%)',
         }}
       />
+
+      <div className="hero-copy-feather pointer-events-none absolute inset-y-0 left-0 z-10 w-full lg:w-[62%]" />
 
       <div
         ref={gridLinesRef}
@@ -145,7 +147,7 @@ export default function HeroSection({ onVRReady }: { onVRReady?: () => void }) {
             className="grid-line absolute h-full w-px"
             style={{
               left: `${(i + 1) * 11}%`,
-              background: 'linear-gradient(to bottom, transparent, rgba(0, 217, 255, 0.15), transparent)',
+              background: 'linear-gradient(to bottom, transparent, rgba(255, 255, 255, 0.12), transparent)',
               transformStyle: 'preserve-3d',
             }}
           />
@@ -156,7 +158,7 @@ export default function HeroSection({ onVRReady }: { onVRReady?: () => void }) {
             className="grid-line absolute w-full h-px"
             style={{
               top: `${(i + 1) * 14}%`,
-              background: 'linear-gradient(to right, transparent, rgba(0, 217, 255, 0.12), transparent)',
+              background: 'linear-gradient(to right, transparent, rgba(255, 255, 255, 0.1), transparent)',
               transformStyle: 'preserve-3d',
             }}
           />
@@ -164,14 +166,14 @@ export default function HeroSection({ onVRReady }: { onVRReady?: () => void }) {
       </div>
 
       <div className="relative z-20 h-full max-w-7xl mx-auto px-4 sm:px-6">
-        <div className="h-full flex items-center justify-center">
-          <div className="flex-1 flex flex-col justify-center lg:pt-0 pt-16 sm:pt-20">
+        <div className="h-full flex items-center">
+          <div className="max-w-2xl flex flex-col justify-center lg:pt-0 pt-16 sm:pt-20">
             <div className="flex items-center gap-2 mb-5 sm:mb-8">
               <span className="glow-dot" />
               <span
                 className="text-[10px] sm:text-xs font-bold tracking-wider"
                 style={{
-                  color: '#00D9FF',
+                  color: 'var(--color-text-primary)',
                   fontFamily: 'JetBrains Mono, monospace',
                   letterSpacing: '0.1em',
                 }}
@@ -236,13 +238,13 @@ export default function HeroSection({ onVRReady }: { onVRReady?: () => void }) {
       <div className="hidden sm:flex absolute bottom-8 left-1/2 -translate-x-1/2 flex-col items-center gap-2 z-30">
         <div
           className="w-5 h-8 rounded-lg flex items-start justify-center pt-1.5"
-          style={{ border: '1px solid rgba(0, 217, 255, 0.3)' }}
+          style={{ border: '1px solid rgba(255, 255, 255, 0.3)' }}
         >
           <div
             className="w-0.5 h-2 rounded-full"
             style={{
               background: 'var(--color-unity-cyan)',
-              animation: 'scrollDot 2s ease-in-out infinite',
+              animation: 'scrollDot 2s cubic-bezier(0.16, 1, 0.3, 1) infinite',
             }}
           />
         </div>

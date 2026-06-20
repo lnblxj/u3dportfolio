@@ -26,6 +26,7 @@ export default function VRHeroBackground({ onReady }: VRHeroBackgroundProps) {
     autoRotate: false,
     animFrame: 0,
     isVisible: true,
+    isRendering: false,
     observer: null as IntersectionObserver | null,
     canvas: null as HTMLCanvasElement | null,
   });
@@ -92,16 +93,21 @@ export default function VRHeroBackground({ onReady }: VRHeroBackgroundProps) {
       scene.add(sphere);
 
       // Start render loop
-      animate();
+      startRendering();
 
       // Setup IntersectionObserver to pause rendering when out of view
       const observer = new IntersectionObserver(
         (entries) => {
           entries.forEach(entry => {
             s.isVisible = entry.isIntersecting;
+            if (entry.isIntersecting) {
+              startRendering();
+            } else {
+              stopRendering();
+            }
           });
         },
-        { rootMargin: '400px 0px' }
+        { threshold: 0.01 }
       );
       if (mountRef.current) observer.observe(mountRef.current);
       s.observer = observer; // store in stateRef to disconnect later
@@ -137,9 +143,9 @@ export default function VRHeroBackground({ onReady }: VRHeroBackgroundProps) {
     function onVisibilityChange() {
       const s = stateRef.current;
       if (document.hidden) {
-        cancelAnimationFrame(s.animFrame);
-      } else {
-        animate();
+        stopRendering();
+      } else if (s.isVisible) {
+        startRendering();
       }
     }
 
@@ -151,9 +157,27 @@ export default function VRHeroBackground({ onReady }: VRHeroBackgroundProps) {
       s.renderer.setSize(window.innerWidth, window.innerHeight);
     }
 
+    function startRendering() {
+      const s = stateRef.current;
+      if (s.isRendering || destroyed) return;
+      s.isRendering = true;
+      animate();
+    }
+
+    function stopRendering() {
+      const s = stateRef.current;
+      s.isRendering = false;
+      cancelAnimationFrame(s.animFrame);
+      s.animFrame = 0;
+    }
+
     function animate() {
       const s = stateRef.current;
       if (!s.scene || !s.camera || !s.renderer || destroyed) return;
+      if (!s.isRendering || !s.isVisible || document.hidden) {
+        s.isRendering = false;
+        return;
+      }
 
       s.animFrame = requestAnimationFrame(animate);
 
@@ -180,9 +204,7 @@ export default function VRHeroBackground({ onReady }: VRHeroBackgroundProps) {
         500 * Math.sin(phi) * Math.sin(theta)
       );
 
-      if (s.isVisible) {
-        s.renderer.render(s.scene, s.camera);
-      }
+      s.renderer.render(s.scene, s.camera);
     }
 
     function THREE_degToRad(deg: number) {
@@ -194,7 +216,7 @@ export default function VRHeroBackground({ onReady }: VRHeroBackgroundProps) {
     return () => {
       destroyed = true;
       const s = stateRef.current;
-      cancelAnimationFrame(s.animFrame);
+      stopRendering();
       if (s.idleTimer) clearTimeout(s.idleTimer);
       if (s.observer) {
         s.observer.disconnect();

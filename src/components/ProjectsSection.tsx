@@ -1,229 +1,396 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { projects } from '@/data/projects';
-import ProjectCard from './ProjectCard';
 
 gsap.registerPlugin(ScrollTrigger);
 
-type FilterType = 'all' | 'virtual-simulation' | 'digital-twin';
+const categoryLabel = {
+  'virtual-simulation': 'Virtual Simulation',
+  'digital-twin': 'Digital Twin',
+} as const;
+
+function drawCover(ctx: CanvasRenderingContext2D, source: CanvasImageSource, width: number, height: number) {
+  const sourceWidth =
+    source instanceof HTMLVideoElement ? source.videoWidth : source instanceof HTMLImageElement ? source.naturalWidth : width;
+  const sourceHeight =
+    source instanceof HTMLVideoElement ? source.videoHeight : source instanceof HTMLImageElement ? source.naturalHeight : height;
+
+  if (!sourceWidth || !sourceHeight) return;
+
+  const scale = Math.max(width / sourceWidth, height / sourceHeight);
+  const drawWidth = sourceWidth * scale;
+  const drawHeight = sourceHeight * scale;
+  ctx.drawImage(source, (width - drawWidth) / 2, (height - drawHeight) / 2, drawWidth, drawHeight);
+}
 
 export default function ProjectsSection() {
-  const [filter, setFilter] = useState<FilterType>('all');
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [activeImageIndex, setActiveImageIndex] = useState(0);
+  const [showVideo, setShowVideo] = useState(false);
+  const [imageChangeTick, setImageChangeTick] = useState(0);
   const sectionRef = useRef<HTMLElement>(null);
-  const headerRef = useRef<HTMLDivElement>(null);
-  const gridRef = useRef<HTMLDivElement>(null);
+  const pinRef = useRef<HTMLDivElement>(null);
+  const mediaRef = useRef<HTMLDivElement>(null);
+  const copyRef = useRef<HTMLDivElement>(null);
+  const progressRef = useRef<HTMLDivElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const videoFrameRef = useRef(0);
+  const activeIndexRef = useRef(0);
+
+  const activeProject = projects[activeIndex];
+  const activeImage = activeProject.images[activeImageIndex] ?? activeProject.images[0];
+  const projectCount = projects.length;
+  const firstImages = useMemo(() => projects.map((project) => project.images[0]), []);
 
   useEffect(() => {
+    activeIndexRef.current = activeIndex;
+    setActiveImageIndex(0);
+    setShowVideo(false);
+  }, [activeIndex]);
+
+  useEffect(() => {
+    if (showVideo || activeProject.images.length <= 1) return;
+
+    const timer = window.setTimeout(() => {
+      setActiveImageIndex((current) => (current + 1) % activeProject.images.length);
+    }, 4200);
+
+    return () => window.clearTimeout(timer);
+  }, [activeProject.images.length, activeIndex, activeImageIndex, imageChangeTick, showVideo]);
+
+  const updateActiveImage = (updater: number | ((current: number) => number)) => {
+    setImageChangeTick((current) => current + 1);
+    setActiveImageIndex(updater);
+  };
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas || showVideo) return;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const width = 320;
+    const height = 180;
+    canvas.width = width;
+    canvas.height = height;
+
+    const image = new Image();
+    image.crossOrigin = 'anonymous';
+    image.src = activeImage;
+    image.onload = () => {
+      ctx.clearRect(0, 0, width, height);
+      drawCover(ctx, image, width, height);
+    };
+  }, [activeImage, showVideo]);
+
+  useEffect(() => {
+    window.cancelAnimationFrame(videoFrameRef.current);
+    if (!showVideo) return;
+
+    const canvas = canvasRef.current;
+    const video = videoRef.current;
+    if (!canvas || !video) return;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const width = 320;
+    const height = 180;
+    canvas.width = width;
+    canvas.height = height;
+
+    const drawVideoFrame = () => {
+      if (video.readyState >= 2) {
+        ctx.clearRect(0, 0, width, height);
+        drawCover(ctx, video, width, height);
+      }
+      videoFrameRef.current = window.requestAnimationFrame(drawVideoFrame);
+    };
+
+    drawVideoFrame();
+    return () => window.cancelAnimationFrame(videoFrameRef.current);
+  }, [showVideo, activeIndex]);
+
+  useEffect(() => {
+    const section = sectionRef.current;
+    const pin = pinRef.current;
+    if (!section || !pin) return;
+
     const ctx = gsap.context(() => {
       const mm = gsap.matchMedia();
 
       mm.add(
         {
-          isDesktop: '(min-width: 768px)',
+          isDesktop: '(min-width: 1024px)',
           reduceMotion: '(prefers-reduced-motion: reduce)',
         },
         (context) => {
-          const { reduceMotion } = context.conditions as { reduceMotion?: boolean };
+          const { isDesktop, reduceMotion } = context.conditions as {
+            isDesktop?: boolean;
+            reduceMotion?: boolean;
+          };
 
-          if (reduceMotion) return;
+          if (!isDesktop || reduceMotion) return;
 
-          // 先设置所有元素为可见状态（防止动画未触发时不显示）
-          gsap.set([headerRef.current, gridRef.current], { opacity: 1 });
+          ScrollTrigger.create({
+            trigger: section,
+            start: 'top top',
+            end: () => `+=${projectCount * window.innerHeight}`,
+            pin,
+            scrub: 0.65,
+            anticipatePin: 1,
+            onUpdate: (self) => {
+              const nextIndex = Math.min(projectCount - 1, Math.floor(self.progress * projectCount));
 
-          // 标题进入动画
-          gsap.from(headerRef.current, {
-            y: 60,
-            opacity: 0,
-            duration: 1,
-            ease: 'power3.out',
-            scrollTrigger: {
-              trigger: headerRef.current,
-              start: 'top 80%',
-              toggleActions: 'play none none none',
-            },
-          });
+              if (nextIndex !== activeIndexRef.current) {
+                activeIndexRef.current = nextIndex;
+                setActiveIndex(nextIndex);
+              }
 
-          // 视差效果 - 标题在滚动时上移
-          gsap.to(headerRef.current, {
-            y: -50,
-            ease: 'none',
-            scrollTrigger: {
-              trigger: sectionRef.current,
-              start: 'top top',
-              end: 'bottom top',
-              scrub: 1,
+              gsap.to(progressRef.current, {
+                scaleX: self.progress,
+                transformOrigin: 'left center',
+                duration: 0.24,
+                ease: 'power2.out',
+                overwrite: true,
+              });
             },
           });
         }
       );
 
       return () => mm.revert();
-    }, sectionRef);
+    }, section);
 
     return () => ctx.revert();
-  }, []);
+  }, [projectCount]);
 
-  const filtered = filter === 'all' ? projects : projects.filter((p) => p.category === filter);
+  useEffect(() => {
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduceMotion) return;
 
-  const filters: { key: FilterType; label: string; count: number }[] = [
-    { key: 'all', label: '全部作品', count: projects.length },
-    {
-      key: 'virtual-simulation',
-      label: '虚拟仿真',
-      count: projects.filter((p) => p.category === 'virtual-simulation').length,
-    },
-    {
-      key: 'digital-twin',
-      label: '数字孪生',
-      count: projects.filter((p) => p.category === 'digital-twin').length,
-    },
-  ];
+    const media = mediaRef.current;
+    const copy = copyRef.current;
+    if (!media || !copy) return;
+
+    gsap.fromTo(
+      media,
+      { autoAlpha: 0, scale: 0.94, x: 42, filter: 'brightness(0.7) saturate(0.85)' },
+      {
+        autoAlpha: 1,
+        scale: 1,
+        x: 0,
+        filter: 'brightness(1) saturate(1)',
+        duration: 0.78,
+        ease: 'power4.out',
+        overwrite: true,
+      }
+    );
+
+    gsap.fromTo(
+      copy.querySelectorAll('[data-project-copy]'),
+      { autoAlpha: 0, y: 26 },
+      { autoAlpha: 1, y: 0, duration: 0.62, stagger: 0.055, ease: 'power3.out', overwrite: true }
+    );
+
+    gsap.fromTo(
+      copy.querySelectorAll('[data-project-tag]'),
+      { autoAlpha: 0, y: 10 },
+      { autoAlpha: 1, y: 0, duration: 0.42, stagger: 0.035, ease: 'power2.out', overwrite: true }
+    );
+  }, [activeIndex]);
 
   return (
     <section
       ref={sectionRef}
       id="projects"
-      className="relative py-14 sm:py-20 md:py-32 px-4 sm:px-6 overflow-hidden"
-      style={{ background: '#0E0E10' }}
+      className="projects-showcase relative overflow-hidden px-4 py-14 sm:px-6 sm:py-20 lg:min-h-screen lg:py-0"
     >
-      {/* 背景装饰 - Unity 网格 */}
-      <div className="unity-grid opacity-20" />
-
-      <div className="max-w-7xl mx-auto relative">
-        {/* Header */}
-        <div ref={headerRef} className="mb-10 sm:mb-16">
-          {/* 眉标 */}
-          <div className="flex items-center gap-3 mb-5 sm:mb-6">
-            <div className="w-8 sm:w-12 h-px" style={{ background: 'var(--color-unity-cyan)' }} />
-            <p className="section-eyebrow">// 精选作品</p>
+      <div className="lg:hidden">
+        <div className="mb-10">
+          <div className="mb-5 flex items-center gap-3">
+            <span className="h-px w-10 bg-[var(--color-ue-blue)]" />
+            <p className="section-eyebrow">// Selected Projects</p>
           </div>
-
-          {/* 标题和描述 */}
-          <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6 lg:gap-8 mb-8 sm:mb-12">
-            <div className="flex-1">
-              <h2 className="section-title mb-4">
-                将现实精准映射至
-                <br />
-                <span style={{ color: 'var(--color-text-tertiary)' }}>数字维度</span>
-              </h2>
-              <p className="text-sm sm:text-base leading-relaxed max-w-xl" style={{ color: 'var(--color-text-secondary)' }}>
-                每一个项目都是对真实世界的精确建模，在虚拟空间中探索无限可能。
-              </p>
-            </div>
-
-            {/* 统计数据 */}
-            <div className="grid grid-cols-3 gap-4 sm:flex sm:gap-8">
-              <div>
-                <div
-                  className="text-3xl sm:text-4xl font-bold mb-1"
-                  style={{ fontFamily: 'JetBrains Mono, monospace', color: '#00D9FF' }}
-                >
-                  10+
-                </div>
-                <div className="text-xs" style={{ color: 'var(--color-text-tertiary)' }}>
-                  已构建项目
-                </div>
-              </div>
-              <div>
-                <div
-                  className="text-3xl sm:text-4xl font-bold mb-1"
-                  style={{ fontFamily: 'JetBrains Mono, monospace', color: '#00D9FF' }}
-                >
-                  2年+
-                </div>
-                <div className="text-xs" style={{ color: 'var(--color-text-tertiary)' }}>
-                  Unity3D 经验
-                </div>
-              </div>
-              <div>
-                <div
-                  className="text-3xl sm:text-4xl font-bold mb-1"
-                  style={{ fontFamily: 'JetBrains Mono, monospace', color: '#00D9FF' }}
-                >
-                  1项
-                </div>
-                <div className="text-xs" style={{ color: 'var(--color-text-tertiary)' }}>
-                  知识产权
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* 过滤器 */}
-          <div className="-mx-4 sm:mx-0 overflow-x-auto pb-2 sm:overflow-visible">
-            <div className="flex items-center gap-2 sm:gap-3 px-4 sm:px-0 w-max sm:w-auto sm:flex-wrap">
-            {filters.map((f) => (
-              <button
-                key={f.key}
-                onClick={() => setFilter(f.key)}
-                className="group relative shrink-0 px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg transition-all duration-300"
-                style={
-                  filter === f.key
-                    ? {
-                        background: 'var(--color-unity-cyan)',
-                        color: 'var(--color-base)',
-                        fontFamily: 'JetBrains Mono, monospace',
-                        fontWeight: 700,
-                        fontSize: '14px',
-                      }
-                    : {
-                        background: 'transparent',
-                        color: 'var(--color-text-secondary)',
-                        border: '1px solid var(--color-border)',
-                        fontSize: '14px',
-                      }
-                }
-              >
-                <span className="flex items-center gap-2">
-                  {f.label}
-                  <span
-                    className="inline-flex items-center justify-center min-w-[22px] h-5 px-1.5 rounded text-xs font-bold"
-                    style={
-                      filter === f.key
-                        ? { background: 'rgba(14,14,16,0.3)', color: 'var(--color-base)' }
-                        : { background: 'rgba(0, 217, 255, 0.15)', color: 'var(--color-text-tertiary)' }
-                    }
-                  >
-                    {f.count}
-                  </span>
-                </span>
-
-                {/* 悬停发光效果 */}
-                {filter !== f.key && (
-                  <div
-                    className="absolute inset-0 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                    style={{
-                      background: 'rgba(0, 217, 255, 0.05)',
-                      border: '1px solid rgba(0, 217, 255, 0.3)',
-                    }}
-                  />
-                )}
-              </button>
-            ))}
-            </div>
-          </div>
+          <h2 className="section-title mb-4">精选项目</h2>
         </div>
 
-        {/* 项目网格 - 响应式对齐布局 */}
-        <div
-          ref={gridRef}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6"
-        >
-          {filtered.map((project, i) => (
-            <ProjectCard key={project.id} project={project} index={i} />
+        <div className="grid gap-6">
+          {projects.map((project, projectIndex) => (
+            <article key={project.id} className="mobile-project-card">
+              <div className="mobile-project-media">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={project.images[0]} alt={project.title} />
+                <span>{String(projectIndex + 1).padStart(2, '0')}</span>
+              </div>
+              <div className="p-5">
+                <p className="mb-3 text-xs font-semibold" style={{ color: 'var(--color-ue-blue)' }}>
+                  {categoryLabel[project.category]}
+                </p>
+                <h3 className="mb-3 text-2xl font-bold leading-tight">{project.title}</h3>
+                <p className="mb-4 text-sm leading-7" style={{ color: 'var(--color-text-secondary)' }}>
+                  {project.description}
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {project.tags.map((tag) => (
+                    <span key={tag} className="project-slide-tag">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </article>
           ))}
         </div>
+      </div>
 
-        {/* 底部装饰 */}
-        <div className="mt-12 sm:mt-20 text-center">
-          <div className="inline-flex max-w-full items-center justify-center gap-3">
-            <div className="w-2 h-2 rounded-full animate-pulse" style={{ background: '#00D9FF' }} />
-            <p className="text-xs" style={{ color: 'var(--color-text-tertiary)', fontFamily: 'JetBrains Mono, monospace' }}>
-              持续更新中，更多项目即将呈现
+      <div ref={pinRef} className="relative z-10 mx-auto hidden min-h-screen max-w-7xl items-center lg:flex">
+        <div className="project-immersive-bg" aria-hidden="true">
+          <canvas ref={canvasRef} />
+        </div>
+        <div className="projects-atmosphere" />
+
+        <div className="relative z-10 grid w-full gap-8 lg:grid-cols-[0.92fr_1.08fr] lg:items-center lg:gap-12">
+          <div ref={copyRef} className="max-w-2xl lg:pt-10">
+            <div data-project-copy className="mb-5 flex items-center gap-3">
+              <span className="h-px w-10 bg-[var(--color-ue-blue)]" />
+              <p className="section-eyebrow">// Selected Projects</p>
+            </div>
+
+            <p data-project-copy className="mb-4 font-mono text-sm" style={{ color: 'var(--color-text-tertiary)' }}>
+              {String(activeIndex + 1).padStart(2, '0')} / {String(projectCount).padStart(2, '0')}
             </p>
+
+            <p
+              data-project-copy
+              className="mb-4 inline-flex rounded-md border px-3 py-1 text-xs font-semibold"
+              style={{
+                borderColor: 'rgba(255, 255, 255, 0.22)',
+                background: 'rgba(255, 255, 255, 0.07)',
+                color: 'var(--color-text-primary)',
+              }}
+            >
+              {categoryLabel[activeProject.category]}
+            </p>
+
+            <h2 data-project-copy className="project-slide-title mb-4">
+              {activeProject.title}
+            </h2>
+
+            <p data-project-copy className="mb-3 text-sm leading-relaxed sm:text-base" style={{ color: 'var(--color-text-tertiary)' }}>
+              {activeProject.subtitle}
+            </p>
+
+            <p data-project-copy className="mb-7 max-w-xl text-sm leading-7 sm:text-base" style={{ color: 'var(--color-text-secondary)' }}>
+              {activeProject.description}
+            </p>
+
+            <div className="mb-8 flex flex-wrap gap-2">
+              {activeProject.tags.map((tag) => (
+                <span key={tag} data-project-tag className="project-slide-tag">
+                  {tag}
+                </span>
+              ))}
+            </div>
+
+            <div data-project-copy className="flex flex-col gap-3 min-[420px]:flex-row">
+              {activeProject.videoUrl && (
+                <button type="button" onClick={() => setShowVideo((value) => !value)} className="btn-primary">
+                  {showVideo ? '查看截图' : '演示视频'}
+                </button>
+              )}
+              {activeProject.demoUrl && (
+                <a href={activeProject.demoUrl} target="_blank" rel="noopener noreferrer" className="btn-ghost">
+                  在线体验
+                </a>
+              )}
+              {activeProject.githubUrl && (
+                <a href={activeProject.githubUrl} target="_blank" rel="noopener noreferrer" className="btn-ghost">
+                  GitHub
+                </a>
+              )}
+            </div>
+          </div>
+
+          <div className="relative">
+            <div ref={mediaRef} className="project-slide-media">
+              {showVideo && activeProject.videoUrl ? (
+                <video ref={videoRef} src={activeProject.videoUrl} controls autoPlay playsInline className="h-full w-full object-cover" />
+              ) : (
+                <div className="project-image-track" style={{ transform: `translate3d(-${activeImageIndex * 100}%, 0, 0)` }}>
+                  {activeProject.images.map((image, index) => (
+                    <div key={image} className="project-image-frame">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={image} alt={`${activeProject.title} - ${index + 1}`} />
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              <div className="project-slide-media-overlay" />
+              <div className="absolute left-4 top-4 rounded-md border border-white/15 bg-black/35 px-3 py-1 font-mono text-xs text-white/80 backdrop-blur-md">
+                {activeProject.year}
+              </div>
+
+              {!showVideo && activeProject.images.length > 1 && (
+                <>
+                  <button
+                    type="button"
+                    className="project-image-nav left-4"
+                    aria-label="上一张项目图片"
+                    onClick={() => updateActiveImage((current) => (current === 0 ? activeProject.images.length - 1 : current - 1))}
+                  >
+                    <span aria-hidden="true">&lsaquo;</span>
+                  </button>
+                  <button
+                    type="button"
+                    className="project-image-nav right-4"
+                    aria-label="下一张项目图片"
+                    onClick={() => updateActiveImage((current) => (current + 1) % activeProject.images.length)}
+                  >
+                    <span aria-hidden="true">&rsaquo;</span>
+                  </button>
+                  <div className="project-image-dots">
+                    {activeProject.images.map((image, index) => (
+                      <button
+                        key={image}
+                        type="button"
+                        aria-label={`切换到第 ${index + 1} 张项目图片`}
+                        data-active={index === activeImageIndex}
+                        onClick={() => updateActiveImage(index)}
+                      />
+                    ))}
+                  </div>
+                </>
+              )}
+            </div>
+
+            <div className="mt-5 hidden grid-cols-5 gap-2 lg:grid">
+              {firstImages.map((image, index) => (
+                <button
+                  key={projects[index].id}
+                  type="button"
+                  onClick={() => setActiveIndex(index)}
+                  className="project-thumb"
+                  data-active={index === activeIndex}
+                  aria-label={`切换到项目 ${index + 1}`}
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={image} alt="" className="h-full w-full object-cover" />
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <div className="absolute bottom-8 left-0 right-0 hidden px-4 lg:block">
+          <div className="mx-auto h-px max-w-7xl overflow-hidden bg-white/10">
+            <div ref={progressRef} className="h-full origin-left scale-x-0 bg-[var(--color-ue-blue)]" />
           </div>
         </div>
       </div>

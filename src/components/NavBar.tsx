@@ -29,7 +29,7 @@ export default function NavBar() {
           backdropFilter: 'blur(20px) saturate(180%)',
           WebkitBackdropFilter: 'blur(20px) saturate(180%)',
           background: 'rgba(14,14,16,0.8)',
-          borderBottom: '1px solid rgba(0, 217, 255, 0.1)',
+          borderBottom: '1px solid rgba(255, 255, 255, 0.12)',
         } : {}}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
@@ -44,7 +44,7 @@ export default function NavBar() {
                 href={link.href}
                 className="text-sm transition-colors duration-200"
                 style={{ color: 'var(--color-text-secondary)', textDecoration: 'none' }}
-                onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--color-unity-cyan)')}
+                onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--color-text-primary)')}
                 onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--color-text-secondary)')}
               >
                 {link.label}
@@ -76,7 +76,7 @@ export default function NavBar() {
         {/* Mobile menu */}
         {menuOpen && (
           <div className="md:hidden px-4 sm:px-6 pb-6 pt-2 flex flex-col gap-4 nav-blur"
-            style={{ borderTop: '1px solid rgba(0, 217, 255, 0.1)' }}>
+            style={{ borderTop: '1px solid rgba(255, 255, 255, 0.12)' }}>
             {navLinks.map((link) => (
               <a
                 key={link.href}
